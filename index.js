@@ -2,6 +2,7 @@ const prompts = require("prompts");
 const { act } = require("./commands/act");
 const { readAsset } = require("./commands/assets");
 const { createCharacter } = require("./commands/character");
+const { logEvent } = require("./commands/logEvent");
 const { runOracle } = require("./commands/oracles");
 
 (async () => {
@@ -14,6 +15,11 @@ const { runOracle } = require("./commands/oracles");
         title: "Action Roll",
         description: "See what fate has in store!",
         value: "action_roll",
+      },
+      {
+        title: "Log an Event",
+        description: "Keep a history of what your character accomplishes.",
+        value: "log",
       },
       {
         title: "Use an Oracle",
@@ -36,6 +42,8 @@ const { runOracle } = require("./commands/oracles");
   switch (response.command) {
     case "action_roll":
       return act();
+    case "log":
+      return logEvent();
     case "oracle":
       return runOracle();
     case "read_asset":
