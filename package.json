@@ -1,0 +1,16 @@
+{
+  "name": "solo-rpg-cli",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "prompts": "^2.4.2",
+    "ramda": "^0.28.0"
+  }
+}
