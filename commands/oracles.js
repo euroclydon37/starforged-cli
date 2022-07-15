@@ -12,7 +12,7 @@ const {
   split,
 } = require("ramda");
 const Tables = require("../oracles.json");
-const { getResult, randomInteger } = require("../utils");
+const { getTableResult, randomInteger } = require("../utils");
 
 const isTable = pipe(
   keys,
@@ -40,7 +40,7 @@ async function selectKey(targetPath = []) {
   const nestedValue = path(nextPath)(Tables);
 
   return isTable(nestedValue)
-    ? getResult(randomInteger({ max: 100 }))(nestedValue)
+    ? getTableResult(randomInteger({ max: 100 }))(nestedValue)
     : await selectKey(nextPath);
 }
 

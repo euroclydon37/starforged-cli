@@ -1,18 +1,20 @@
 const prompts = require("prompts");
-const { act } = require("./commands/act");
+const { dice } = require("./commands/dice");
 const { readAsset } = require("./commands/assets");
 const { createCharacter } = require("./commands/character");
 const { events } = require("./commands/events");
+const { makeAMove } = require("./commands/moves");
 const { npc } = require("./commands/npc");
 const { runOracle } = require("./commands/oracles");
 
 const commands = {
-  act,
+  dice,
   events,
   npc,
   readAsset,
   createCharacter,
   runOracle,
+  makeAMove,
 };
 
 async function run() {
@@ -22,9 +24,14 @@ async function run() {
     message: "Choose a command.",
     choices: [
       {
-        title: "Action Roll",
+        title: "Dice",
         description: "See what fate has in store!",
-        value: "act",
+        value: "dice",
+      },
+      {
+        title: "Make a move",
+        description: "Make one of Starforged many moves to progress the story.",
+        value: "makeAMove",
       },
       {
         title: "NPC",
