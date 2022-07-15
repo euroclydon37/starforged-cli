@@ -4,4 +4,6 @@ const path = require("path");
 const appPath = path.resolve(os.homedir(), "starforged-cli");
 const dbPath = path.resolve(appPath, "db.json");
 
-module.exports = { appPath, dbPath };
+const ranks = ["troublesome", "dangerous", "formidable", "extreme", "epic"];
+
+module.exports = { appPath, dbPath, ranks };

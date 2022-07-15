@@ -2,53 +2,59 @@ const prompts = require("prompts");
 const { act } = require("./commands/act");
 const { readAsset } = require("./commands/assets");
 const { createCharacter } = require("./commands/character");
-const { logEvent } = require("./commands/logEvent");
+const { events } = require("./commands/events");
+const { npc } = require("./commands/npc");
 const { runOracle } = require("./commands/oracles");
 
-(async () => {
+const commands = {
+  act,
+  events,
+  npc,
+  readAsset,
+  createCharacter,
+  runOracle,
+};
+
+async function run() {
   const response = await prompts({
     type: "select",
     name: "command",
-    message: "What would you like to do?",
+    message: "Choose a command.",
     choices: [
       {
         title: "Action Roll",
         description: "See what fate has in store!",
-        value: "action_roll",
+        value: "act",
       },
       {
-        title: "Log an Event",
-        description: "Keep a history of what your character accomplishes.",
-        value: "log",
+        title: "NPC",
+        description: "Create, edit, or otherwise interact with npcs.",
+        value: "npc",
       },
       {
-        title: "Use an Oracle",
+        title: "Events",
+        description: "Log or view events.",
+        value: "events",
+      },
+      {
+        title: "Oracle",
         description: "Roll up some random stuff.",
-        value: "oracle",
+        value: "runOracle",
       },
       {
-        title: "Read an Asset",
+        title: "Assets",
         description: "Get a closer look at an asset.",
-        value: "read_asset",
+        value: "readAsset",
       },
       {
         title: "Create Character",
         description: "Create a character to play as.",
-        value: "create_character",
+        value: "createCharacter",
       },
     ],
   });
 
-  switch (response.command) {
-    case "action_roll":
-      return act();
-    case "log":
-      return logEvent();
-    case "oracle":
-      return runOracle();
-    case "read_asset":
-      return readAsset();
-    case "create_character":
-      return createCharacter();
-  }
-})();
+  commands[response.command]();
+}
+
+run();
