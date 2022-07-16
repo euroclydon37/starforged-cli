@@ -1,5 +1,6 @@
 const prompts = require("prompts");
 const { readDb } = require("./db");
+const { getCharacterStat } = require("./queries");
 
 async function selectCharacterStat() {
   const data = await readDb();
@@ -13,10 +14,7 @@ async function selectCharacterStat() {
     })),
   });
 
-  return {
-    name: statName,
-    value: data.character.stats[statName],
-  };
+  return await getCharacterStat(statName);
 }
 
 async function selectCharacterAsset() {
@@ -33,7 +31,24 @@ async function selectCharacterAsset() {
   return data.character.assets[index];
 }
 
+async function selectNpc() {
+  const data = await readDb();
+
+  const { name } = await prompts({
+    type: "autocomplete",
+    name: "name",
+    message: "Which NPC?",
+    choices: Object.keys(data.npcs).map((name) => ({
+      title: name,
+      value: name,
+    })),
+  });
+
+  return data.npcs[name];
+}
+
 module.exports = {
   selectCharacterStat,
   selectCharacterAsset,
+  selectNpc,
 };

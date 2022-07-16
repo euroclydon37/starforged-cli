@@ -2,15 +2,13 @@ const prompts = require("prompts");
 const { sort, has } = require("ramda");
 const { readDb, writeDb } = require("../db");
 const { selectCharacterStat, selectCharacterAsset } = require("../userPrompts");
-const { getDiceResults, randomInteger, printDiceResults } = require("../utils");
+const { getDiceResults, printDiceResults, rollDice } = require("../utils");
 
 const commands = {
   roll: {
     title: "Roll Dice",
     description: "It's exactly what it sounds like.",
     run: async () => {
-      const data = await readDb();
-
       const { diceNames } = await prompts({
         type: "multiselect",
         name: "diceNames",
@@ -21,14 +19,7 @@ const commands = {
         })),
       });
 
-      diceNames.forEach((name) => {
-        data.dice[name] =
-          name === "d100"
-            ? randomInteger({ max: 100 })
-            : name === "action"
-            ? randomInteger({ max: 6 })
-            : randomInteger({ max: 10 });
-      });
+      await rollDice(diceNames);
 
       await writeDb(data);
       console.log(
@@ -69,12 +60,7 @@ const commands = {
         if (bonusType === "stat") {
           const stat = await selectCharacterStat();
 
-          printDiceResults(
-            getDiceResults({
-              bonus: stat.value,
-              ...data.dice,
-            })
-          );
+          printDiceResults(getDiceResults({ bonus: stat.value }));
           return;
         }
 
@@ -85,14 +71,12 @@ const commands = {
             console.log("That asset doesn't have a condition meter.");
           }
 
-          printDiceResults(
-            getDiceResults({ bonus: asset.condition_meter, ...data.dice })
-          );
+          printDiceResults(getDiceResults({ bonus: asset.condition_meter }));
           return;
         }
 
         if (bonusType === "none") {
-          printDiceResults(getDiceResults(data.dice));
+          printDiceResults(getDiceResults());
           return;
         }
 

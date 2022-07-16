@@ -1,6 +1,8 @@
 const prompts = require("prompts");
 const { ranks } = require("../constants");
 const { readDb, writeDb } = require("../db");
+const { getCharacterStat, getNpc } = require("../queries");
+const { rollDice, getDiceResults } = require("../utils");
 
 const moves = {
   Legacy: {
@@ -65,8 +67,10 @@ const moves = {
     "Overcome Destruction": () => {},
   },
   Quest: {
-    "Forsake Your Vow": async () => {
-      const { name, rank, isToAConnection } = await prompts([
+    "Swear an Iron Vow": async () => {
+      const data = await readDb();
+
+      const { name, rank, isToAConnection, connectionName } = await prompts([
         {
           type: "text",
           name: "name",
@@ -79,7 +83,7 @@ const moves = {
           choices: ranks.map((value) => ({ title: value, value })),
         },
         {
-          type: "autocomplete",
+          type: "select",
           name: "isToAConnection",
           message: "Is this vow being made to a connection?",
           choices: [
@@ -87,9 +91,16 @@ const moves = {
             { title: "No", value: false },
           ],
         },
+        {
+          type: (prev) => (prev === true ? "autocomplete" : null),
+          name: "connectionName",
+          message: "Which connection?",
+          choices: Object.keys(data.npcs).map((name) => ({
+            title: name,
+            value: name,
+          })),
+        },
       ]);
-
-      const data = await readDb();
 
       if (!data.vows) {
         data.vows = {};
@@ -106,13 +117,46 @@ const moves = {
         progress: 0,
       };
 
-      await writeDb(data);
-
       console.log("Your vow has been sworn.");
+
+      await rollDice();
+      let bonus = (await getCharacterStat("heart")).value;
+
+      if (isToAConnection) {
+        const npc = await getNpc(connectionName);
+        bonus += npc.bonded ? 2 : 1;
+      }
+
+      const { result } = getDiceResults({
+        bonus,
+        ...data.dice,
+      });
+
+      if (result === "strong hit") {
+        data.character.meters.momentum += 2;
+        console.log(
+          "You are emboldened and it is clear what you must do next. +2 momentum."
+        );
+      }
+
+      if (result === "weak hit") {
+        data.character.meters.momentum += 1;
+        console.log(
+          "You are determined but begin your quest with more questions than answers. +1 momentum. Envision what you do to find a path forward."
+        );
+      }
+
+      if (result === "miss") {
+        console.log(
+          "You must overcome a significant obstacle before you begin your quest. Envision what stands in your way."
+        );
+      }
+
+      await writeDb(data);
     },
     "Fulfill Your Vow": () => {},
+    "Forsake Your Vow": async () => {},
     "Reach a Milestone": () => {},
-    "Swear an Iron Vow": () => {},
   },
   Recover: {
     Heal: () => {},

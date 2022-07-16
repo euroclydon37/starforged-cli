@@ -63,6 +63,7 @@ const commands = {
 
     data.npcs[name].rank = rank;
     data.npcs[name].role = role;
+    data.npcs[name].bonded = false;
 
     await writeDb(data);
     console.log("Connection made");
