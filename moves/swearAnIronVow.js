@@ -1,7 +1,7 @@
 const prompts = require("prompts");
 const { ranks } = require("../constants");
 const { readDb, writeDb } = require("../db");
-const { getCharacterStat, getNpc } = require("../queries");
+const { getCharacterStat, getNpc } = require("../getters");
 const { getDiceResults, rollDice } = require("../utils");
 
 async function swearAnIronVow() {

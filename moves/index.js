@@ -1,10 +1,6 @@
 const prompts = require("prompts");
-const { ranks } = require("../constants");
-const { readDb, writeDb } = require("../db");
-const { getCharacterStat, getNpc } = require("../queries");
-const { selectVow } = require("../userPrompts");
-const { rollDice, getDiceResults } = require("../utils");
 const { forsakeYourVow } = require("./forsakeYourVow");
+const { reachAMilestone } = require("./reachAMilestone");
 const { swearAnIronVow } = require("./swearAnIronVow");
 
 const moves = {
@@ -73,7 +69,7 @@ const moves = {
     "Swear an Iron Vow": swearAnIronVow,
     "Fulfill Your Vow": () => {},
     "Forsake Your Vow": forsakeYourVow,
-    "Reach a Milestone": () => {},
+    "Reach a Milestone": reachAMilestone,
   },
   Recover: {
     Heal: () => {},

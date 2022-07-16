@@ -1,6 +1,6 @@
 const prompts = require("prompts");
 const { readDb } = require("./db");
-const { getCharacterStat } = require("./queries");
+const { getCharacterStat } = require("./getters");
 
 async function selectCharacterStat() {
   const data = await readDb();
