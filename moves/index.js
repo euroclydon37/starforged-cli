@@ -1,5 +1,6 @@
 const prompts = require("prompts");
 const { forsakeYourVow } = require("./forsakeYourVow");
+const { fulfillYourVow } = require("./fulfillYourVow");
 const { reachAMilestone } = require("./reachAMilestone");
 const { swearAnIronVow } = require("./swearAnIronVow");
 
@@ -67,7 +68,7 @@ const moves = {
   },
   Quest: {
     "Swear an Iron Vow": swearAnIronVow,
-    "Fulfill Your Vow": () => {},
+    "Fulfill Your Vow": fulfillYourVow,
     "Forsake Your Vow": forsakeYourVow,
     "Reach a Milestone": reachAMilestone,
   },

@@ -65,12 +65,7 @@ async function swearAnIronVow() {
     bonus += npc.bonded ? 2 : 1;
   }
 
-  const { result } = printDiceResults(
-    getDiceResults({
-      bonus,
-      ...data.dice,
-    })
-  );
+  const { result } = printDiceResults(await getDiceResults({ bonus }));
 
   if (result === "strong hit") {
     await gainMomentum(2);

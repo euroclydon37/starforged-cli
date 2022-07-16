@@ -60,7 +60,7 @@ const commands = {
         if (bonusType === "stat") {
           const stat = await selectCharacterStat();
 
-          printDiceResults(getDiceResults({ bonus: stat.value }));
+          printDiceResults(await getDiceResults({ bonus: stat.value }));
           return;
         }
 
@@ -71,12 +71,14 @@ const commands = {
             console.log("That asset doesn't have a condition meter.");
           }
 
-          printDiceResults(getDiceResults({ bonus: asset.condition_meter }));
+          printDiceResults(
+            await getDiceResults({ bonus: asset.condition_meter })
+          );
           return;
         }
 
         if (bonusType === "none") {
-          printDiceResults(getDiceResults());
+          printDiceResults(await getDiceResults());
           return;
         }
 
@@ -89,12 +91,7 @@ const commands = {
         message: "What value would you like to use?",
       });
 
-      printDiceResults(
-        getDiceResults({
-          ...data.dice,
-          action: value,
-        })
-      );
+      printDiceResults(await getDiceResults({ value }));
     },
   },
 };

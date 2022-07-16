@@ -44,9 +44,13 @@ const rollDice = async (diceNames = ["action", "challengeA", "challengeB"]) => {
   await writeDb(data);
 };
 
-const getDiceResults = ({ bonus = 0, action, challengeA, challengeB }) => {
+const getDiceResults = async ({ bonus = 0, value }) => {
+  const data = await readDb();
+  const challengeA = data.dice.challengeA;
+  const challengeB = data.dice.challengeB;
   const challengeDice = sort((a, b) => a - b, [challengeA, challengeB]);
 
+  let action = value ?? data.dice.action;
   let result = "miss";
 
   if (action + bonus > challengeDice[0]) {
