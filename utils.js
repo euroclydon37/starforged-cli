@@ -47,8 +47,6 @@ const rollDice = async (diceNames = ["action", "challengeA", "challengeB"]) => {
 const getDiceResults = ({ bonus = 0, action, challengeA, challengeB }) => {
   const challengeDice = sort((a, b) => a - b, [challengeA, challengeB]);
 
-  console.log({ bonus, action, challengeA, challengeB });
-
   let result = "miss";
 
   if (action + bonus > challengeDice[0]) {
