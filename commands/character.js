@@ -1,7 +1,5 @@
 const prompts = require("prompts");
-const fs = require("fs/promises");
 const Assets = require("../assets.json");
-const { dbPath } = require("../constants");
 const { readDb, writeDb } = require("../db");
 
 const makeCharacter = ({ name, edge, heart, iron, shadow, wits, assets }) => ({
@@ -20,6 +18,12 @@ const makeCharacter = ({ name, edge, heart, iron, shadow, wits, assets }) => ({
     momentum: 2,
     momentum_reset: 2,
     max_momentum: 10,
+  },
+  legacy_tracks: {
+    quests: 0,
+    bonds: 0,
+    discoveries: 0,
+    xp: 0,
   },
   items: [],
   assets,
