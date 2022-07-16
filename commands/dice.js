@@ -9,6 +9,8 @@ const commands = {
     title: "Roll Dice",
     description: "It's exactly what it sounds like.",
     run: async () => {
+      const data = await readDb();
+
       const { diceNames } = await prompts({
         type: "multiselect",
         name: "diceNames",
@@ -43,45 +45,34 @@ const commands = {
       });
 
       if (isUsingActionDie) {
-        const { bonusType } = await prompts({
+        const { shouldAddStat } = await prompts({
           type: "select",
-          name: "bonusType",
-          message: "What bonus should I add?",
+          name: "shouldAddStat",
+          message: "Should I add a stat?",
           choices: [
-            { title: "A stat", value: "stat" },
-            {
-              title: "An asset condition meter",
-              value: "asset_condition_meter",
-            },
-            { title: "none", value: "none" },
+            { title: "Yes", value: true },
+            { title: "No", value: false },
           ],
         });
 
-        if (bonusType === "stat") {
+        let bonus = 0;
+
+        if (shouldAddStat) {
           const stat = await selectCharacterStat();
-
-          printDiceResults(await getDiceResults({ bonus: stat.value }));
-          return;
+          bonus += stat.value;
         }
 
-        if (bonusType === "asset_condition_meter") {
-          const asset = await selectCharacterAsset();
+        const { additionalBonus } = await prompts({
+          type: "number",
+          name: "additionalBonus",
+          message: "Enter any additional bonus.",
+        });
 
-          if (!has("condition_meter")(asset)) {
-            console.log("That asset doesn't have a condition meter.");
-          }
-
-          printDiceResults(
-            await getDiceResults({ bonus: asset.condition_meter })
-          );
-          return;
+        if (additionalBonus) {
+          bonus += additionalBonus;
         }
 
-        if (bonusType === "none") {
-          printDiceResults(await getDiceResults());
-          return;
-        }
-
+        printDiceResults(await getDiceResults({ bonus }));
         return;
       }
 

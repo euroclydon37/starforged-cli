@@ -6,6 +6,7 @@ const { events } = require("./commands/events");
 const { makeAMove } = require("./moves");
 const { npc } = require("./commands/npc");
 const { runOracle } = require("./commands/oracles");
+const { vows } = require("./commands/vows");
 
 const commands = {
   dice,
@@ -15,6 +16,7 @@ const commands = {
   createCharacter,
   runOracle,
   makeAMove,
+  vows,
 };
 
 async function run() {
@@ -27,6 +29,11 @@ async function run() {
         title: "Dice",
         description: "See what fate has in store!",
         value: "dice",
+      },
+      {
+        title: "Manage Vows",
+        description: "Create, update, or delete vows.",
+        value: "vows",
       },
       {
         title: "Make a move",

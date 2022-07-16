@@ -18,6 +18,14 @@ async function markProgressOnVow({ name, rank }) {
   console.log(`${name} - ${newProgressValue / 4}/10 boxes.`);
 }
 
+async function loseProgressOnVow(name, boxes = 0) {
+  const data = await readDb();
+  const newProgressValue = data.vows[name].progress - boxes * 4;
+  data.vows[name].progress = newProgressValue;
+  await writeDb(data);
+  console.log(`${name} - ${newProgressValue / 4}/10 boxes.`);
+}
+
 async function gainMomentum(amount = 0) {
   const data = await readDb();
   const maxMomentum = data.character.meters.max_momentum;
@@ -27,4 +35,4 @@ async function gainMomentum(amount = 0) {
   );
 }
 
-module.exports = { markProgressOnVow, gainMomentum };
+module.exports = { markProgressOnVow, gainMomentum, loseProgressOnVow };
