@@ -33,13 +33,11 @@ const getTableResult = (num) => (table) =>
 
 const randomInteger = ({ max }) => Math.floor(Math.random() * max) + 1;
 
-const rollDice = async (diceNames = []) => {
+const rollDice = async (diceNames = ["action", "challengeA", "challengeB"]) => {
   const data = await readDb();
   diceNames.forEach((name) => {
     data.dice[name] =
-      name === "d100"
-        ? randomInteger({ max: 100 })
-        : name === "action"
+      name === "action"
         ? randomInteger({ max: 6 })
         : randomInteger({ max: 10 });
   });

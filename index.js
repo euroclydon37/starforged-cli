@@ -3,7 +3,7 @@ const { dice } = require("./commands/dice");
 const { readAsset } = require("./commands/assets");
 const { createCharacter } = require("./commands/character");
 const { events } = require("./commands/events");
-const { makeAMove } = require("./commands/moves");
+const { makeAMove } = require("./moves");
 const { npc } = require("./commands/npc");
 const { runOracle } = require("./commands/oracles");
 

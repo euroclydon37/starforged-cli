@@ -1,5 +1,5 @@
 const prompts = require("prompts");
-const { sort, has } = require("ramda");
+const { has } = require("ramda");
 const { readDb, writeDb } = require("../db");
 const { selectCharacterStat, selectCharacterAsset } = require("../userPrompts");
 const { getDiceResults, printDiceResults, rollDice } = require("../utils");

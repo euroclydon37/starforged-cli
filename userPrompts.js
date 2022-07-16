@@ -47,8 +47,25 @@ async function selectNpc() {
   return data.npcs[name];
 }
 
+async function selectVow() {
+  const data = await readDb();
+
+  const { vowName } = await prompts({
+    type: "autocomplete",
+    name: "vowName",
+    message: "Which Vow?",
+    choices: Object.keys(data.vows).map((name) => ({
+      title: name,
+      value: name,
+    })),
+  });
+
+  return data.vows[vowName];
+}
+
 module.exports = {
   selectCharacterStat,
   selectCharacterAsset,
   selectNpc,
+  selectVow,
 };
