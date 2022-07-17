@@ -41,6 +41,8 @@ async function selectKey(targetPath = []) {
 
   return isTable(nestedValue)
     ? getTableResult(randomInteger({ max: 100 }))(nestedValue)
+    : Array.isArray(nestedValue)
+    ? nestedValue[randomInteger({ max: nestedValue.length }) - 1]
     : await selectKey(nextPath);
 }
 

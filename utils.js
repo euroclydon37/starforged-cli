@@ -10,10 +10,18 @@ const {
   prop,
   __,
   sort,
+  replace,
+  splitEvery,
+  join,
 } = require("ramda");
 const { readDb, writeDb } = require("./db");
 
 const isExactNumber = (key) => split("-")(key).length === 1;
+
+const toTitle = (camelCase) => {
+  const result = camelCase.replace(/([A-Z])/g, " $1");
+  return result.charAt(0).toUpperCase() + result.slice(1);
+};
 
 const compareKey = (num) => (key) => {
   if (isExactNumber(key)) {
@@ -89,11 +97,30 @@ function printProgress({ name, rank, progress }) {
   console.log(`${name} (${rank}) - ${progress / 4}/10 boxes.`);
 }
 
+function printAsset(asset) {
+  const text = [
+    asset.type,
+    asset.name,
+    ...asset.abilities.map(
+      ({ acquired, text }) =>
+        `${acquired ? "[x]" : "[ ]"} - ${pipe(
+          split("\n"),
+          map(pipe(split(" "), splitEvery(14), map(join(" ")), join("\n"))),
+          join("\n"),
+          replace(/\n/g, "\n\t")
+        )(text)}`
+    ),
+  ].join("\n\n");
+  console.log(`\n${text}\n`);
+}
+
 module.exports = {
   getTableResult,
   randomInteger,
+  toTitle,
   rollDice,
   getDiceResults,
   printDiceResults,
   printProgress,
+  printAsset,
 };

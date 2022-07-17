@@ -68,7 +68,7 @@ async function loseConnection({ name }) {
   console.log(`Your connection to ${name} has been lost.`);
 }
 
-async function gainMomentum(amount = 0) {
+async function increaseMomentum(amount = 0) {
   const data = await readDb();
   const maxMomentum = data.character.meters.max_momentum;
   data.character.meters.momentum = Math.min(
@@ -84,6 +84,5 @@ module.exports = {
   loseProgressOnVow,
   markProgressOnConnection,
   loseConnection,
-  gainMomentum,
-  loseConnection,
+  increaseMomentum,
 };

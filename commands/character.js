@@ -1,6 +1,8 @@
 const prompts = require("prompts");
 const Assets = require("../assets.json");
 const { readDb, writeDb } = require("../db");
+const { increaseMomentum } = require("../setters");
+const { toTitle, printAsset } = require("../utils");
 
 const makeCharacter = ({ name, edge, heart, iron, shadow, wits, assets }) => ({
   name,
@@ -115,4 +117,65 @@ async function createCharacter() {
   console.log(`Created character named ${name}`);
 }
 
-module.exports = { createCharacter };
+async function gainMomentum() {
+  const { amount } = await prompts({
+    type: "number",
+    name: "amount",
+    message: "How much momentum?",
+  });
+
+  await increaseMomentum(amount);
+
+  console.log(`Gained ${amount} momentum!`);
+}
+
+async function viewStats() {
+  const data = await readDb();
+  console.log(data.character.stats);
+}
+
+async function viewMeters() {
+  const data = await readDb();
+  console.log(data.character.meters);
+}
+
+async function viewAsset() {
+  const data = await readDb();
+  const assets = require("../assets.json");
+  const { assetName } = await prompts({
+    type: "autocomplete",
+    name: "assetName",
+    message: "Which asset?",
+    choices: data.character.assets.map(({ name }) => ({
+      title: name,
+      value: name,
+    })),
+  });
+
+  const asset = assets.find((asset) => asset.name === assetName);
+  printAsset(asset);
+}
+
+async function manageCharacter() {
+  const commands = {
+    createCharacter,
+    gainMomentum,
+    viewStats,
+    viewMeters,
+    viewAsset,
+  };
+
+  const { command } = await prompts({
+    type: "autocomplete",
+    name: "command",
+    message: "Choose a command.",
+    choices: Object.keys(commands).map((key) => ({
+      title: toTitle(key),
+      value: key,
+    })),
+  });
+
+  await commands[command]();
+}
+
+module.exports = { manageCharacter };

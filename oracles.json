@@ -1,4 +1,26 @@
 {
+  "yes_or_no": {
+    "small_chance": {
+      "1-10": "yes",
+      "11-100": "no"
+    },
+    "unlikely": {
+      "1-25": "yes",
+      "26-100": "no"
+    },
+    "50/50": {
+      "1-50": "yes",
+      "51-100": "no"
+    },
+    "likely": {
+      "1-75": "yes",
+      "76-100": "no"
+    },
+    "almost_certain": {
+      "1-90": "yes",
+      "91-100": "no"
+    }
+  },
   "action": {
     "1": "Abandon",
     "2": "Acquire",

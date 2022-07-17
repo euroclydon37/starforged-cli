@@ -1,7 +1,7 @@
 const prompts = require("prompts");
 const { dice } = require("./commands/dice");
 const { readAsset } = require("./commands/assets");
-const { createCharacter } = require("./commands/character");
+const { manageCharacter } = require("./commands/character");
 const { events } = require("./commands/events");
 const { makeAMove } = require("./moves");
 const { npc } = require("./commands/npc");
@@ -13,7 +13,7 @@ const commands = {
   events,
   npc,
   readAsset,
-  createCharacter,
+  manageCharacter,
   runOracle,
   makeAMove,
   vows,
@@ -61,9 +61,9 @@ async function run() {
         value: "readAsset",
       },
       {
-        title: "Create Character",
-        description: "Create a character to play as.",
-        value: "createCharacter",
+        title: "Manage Character",
+        description: "Create, update, or delete your character.",
+        value: "manageCharacter",
       },
     ],
   });

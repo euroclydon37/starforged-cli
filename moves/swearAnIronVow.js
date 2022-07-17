@@ -2,7 +2,7 @@ const prompts = require("prompts");
 const { ranks } = require("../constants");
 const { readDb, writeDb } = require("../db");
 const { getCharacterStat, getNpc } = require("../getters");
-const { gainMomentum } = require("../setters");
+const { increaseMomentum } = require("../setters");
 const { getDiceResults, rollDice, printDiceResults } = require("../utils");
 
 async function swearAnIronVow() {
@@ -68,14 +68,14 @@ async function swearAnIronVow() {
   const { result } = printDiceResults(await getDiceResults({ bonus }));
 
   if (result === "strong hit") {
-    await gainMomentum(2);
+    await increaseMomentum(2);
     console.log(
       "You are emboldened and it is clear what you must do next. +2 momentum."
     );
   }
 
   if (result === "weak hit") {
-    await gainMomentum(1);
+    await increaseMomentum(1);
     console.log(
       "You are determined but begin your quest with more questions than answers. +1 momentum. Envision what you do to find a path forward."
     );
