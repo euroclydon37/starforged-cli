@@ -2,21 +2,23 @@ const prompts = require("prompts");
 const { dice } = require("./commands/dice");
 const { readAsset } = require("./commands/assets");
 const { manageCharacter } = require("./commands/character");
-const { events } = require("./commands/events");
-const { makeAMove } = require("./moves");
+const { story } = require("./commands/story");
+const { referenceAMove } = require("./moves/index");
 const { npc } = require("./commands/npc");
 const { runOracle } = require("./commands/oracles");
 const { vows } = require("./commands/vows");
+const { lore } = require("./commands/lore");
 
 const commands = {
   dice,
-  events,
+  story,
   npc,
   readAsset,
   manageCharacter,
   runOracle,
-  makeAMove,
+  referenceAMove,
   vows,
+  lore,
 };
 
 async function run() {
@@ -36,9 +38,10 @@ async function run() {
         value: "vows",
       },
       {
-        title: "Make a move",
-        description: "Make one of Starforged many moves to progress the story.",
-        value: "makeAMove",
+        title: "Reference a move",
+        description:
+          "Reference one of Starforged many moves and progress the story.",
+        value: "referenceAMove",
       },
       {
         title: "NPC",
@@ -46,9 +49,14 @@ async function run() {
         value: "npc",
       },
       {
-        title: "Events",
-        description: "Log or view events.",
-        value: "events",
+        title: "Manage Story",
+        description: "Add or view events in your story.",
+        value: "story",
+      },
+      {
+        title: "Manage Lore",
+        description: "Add, remove, or edit the lore of your universe.",
+        value: "lore",
       },
       {
         title: "Oracle",
@@ -68,6 +76,8 @@ async function run() {
     ],
   });
 
+  console.log(commands);
+  console.log(referenceAMove);
   commands[response.command]();
 }
 

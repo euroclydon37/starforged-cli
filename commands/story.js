@@ -34,7 +34,7 @@ const commands = {
   },
 };
 
-async function events() {
+async function story() {
   const response = await prompts({
     type: "select",
     name: "command",
@@ -56,4 +56,4 @@ async function events() {
   commands[response.command]();
 }
 
-module.exports = { events };
+module.exports = { story };
