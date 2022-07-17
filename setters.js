@@ -1,4 +1,34 @@
 const { readDb, writeDb } = require("./db");
+const { printVow } = require("./utils");
+
+async function createNewVow({ name, rank }) {
+  const data = await readDb();
+
+  if (!data.vows) {
+    data.vows = {};
+  }
+
+  if (data.vows[name]) {
+    throw new Error("That vow already exists.");
+  }
+
+  const vow = {
+    name,
+    rank,
+    progress: 0,
+  };
+
+  data.vows[name] = vow;
+
+  await writeDb(data);
+  printVow(vow);
+}
+
+async function deleteVow({ name }) {
+  const data = await readDb();
+  delete data.vows[name];
+  await writeDb(data);
+}
 
 async function markProgressOnVow({ name, rank }) {
   const progressIncrements = {
@@ -15,7 +45,7 @@ async function markProgressOnVow({ name, rank }) {
   );
   data.vows[name].progress = newProgressValue;
   await writeDb(data);
-  console.log(`${name} - ${newProgressValue / 4}/10 boxes.`);
+  printVow(data.vows[name]);
 }
 
 async function loseProgressOnVow(name, boxes = 0) {
@@ -23,7 +53,7 @@ async function loseProgressOnVow(name, boxes = 0) {
   const newProgressValue = data.vows[name].progress - boxes * 4;
   data.vows[name].progress = newProgressValue;
   await writeDb(data);
-  console.log(`${name} - ${newProgressValue / 4}/10 boxes.`);
+  printVow(data.vows[name]);
 }
 
 async function gainMomentum(amount = 0) {
@@ -35,4 +65,10 @@ async function gainMomentum(amount = 0) {
   );
 }
 
-module.exports = { markProgressOnVow, gainMomentum, loseProgressOnVow };
+module.exports = {
+  createNewVow,
+  deleteVow,
+  markProgressOnVow,
+  gainMomentum,
+  loseProgressOnVow,
+};
