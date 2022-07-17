@@ -1,5 +1,6 @@
+const { progressIncrements } = require("./constants");
 const { readDb, writeDb } = require("./db");
-const { printVow } = require("./utils");
+const { printProgress } = require("./utils");
 
 async function createNewVow({ name, rank }) {
   const data = await readDb();
@@ -21,7 +22,7 @@ async function createNewVow({ name, rank }) {
   data.vows[name] = vow;
 
   await writeDb(data);
-  printVow(vow);
+  printProgress(vow);
 }
 
 async function deleteVow({ name }) {
@@ -31,13 +32,6 @@ async function deleteVow({ name }) {
 }
 
 async function markProgressOnVow({ name, rank }) {
-  const progressIncrements = {
-    troublesome: 12,
-    dangerous: 8,
-    formidable: 4,
-    extreme: 2,
-    epic: 1,
-  };
   const data = await readDb();
   const newProgressValue = Math.min(
     data.vows[name].progress + progressIncrements[rank],
@@ -45,15 +39,33 @@ async function markProgressOnVow({ name, rank }) {
   );
   data.vows[name].progress = newProgressValue;
   await writeDb(data);
-  printVow(data.vows[name]);
+  printProgress(data.vows[name]);
 }
 
-async function loseProgressOnVow(name, boxes = 0) {
+async function loseProgressOnVow({ name, boxes = 0 }) {
   const data = await readDb();
   const newProgressValue = data.vows[name].progress - boxes * 4;
   data.vows[name].progress = newProgressValue;
   await writeDb(data);
-  printVow(data.vows[name]);
+  printProgress(data.vows[name]);
+}
+
+async function markProgressOnConnection({ name, rank }) {
+  const data = await readDb();
+  const newProgressValue = Math.min(
+    data.npcs[name].progress + progressIncrements[rank],
+    40
+  );
+  data.npcs[name].progress = newProgressValue;
+  await writeDb(data);
+  printProgress(data.npcs[name]);
+}
+
+async function loseConnection({ name }) {
+  const data = await readDb();
+  data.npcs[name].relationship_broken = true;
+  await writeDb(data);
+  console.log(`Your connection to ${name} has been lost.`);
 }
 
 async function gainMomentum(amount = 0) {
@@ -69,6 +81,9 @@ module.exports = {
   createNewVow,
   deleteVow,
   markProgressOnVow,
-  gainMomentum,
   loseProgressOnVow,
+  markProgressOnConnection,
+  loseConnection,
+  gainMomentum,
+  loseConnection,
 };

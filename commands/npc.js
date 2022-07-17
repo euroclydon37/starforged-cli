@@ -1,6 +1,8 @@
 const prompts = require("prompts");
 const { ranks } = require("../constants");
 const { readDb, writeDb } = require("../db");
+const { markProgressOnConnection, loseConnection } = require("../setters");
+const { selectNpc } = require("../userPrompts");
 
 const commands = {
   create: async () => {
@@ -64,10 +66,19 @@ const commands = {
     data.npcs[name].rank = rank;
     data.npcs[name].role = role;
     data.npcs[name].progress = 0;
+    data.npcs[name].relationship_broken = false;
     data.npcs[name].bonded = false;
 
     await writeDb(data);
     console.log("Connection made");
+  },
+  markProgress: async () => {
+    const npc = await selectNpc();
+    await markProgressOnConnection(npc);
+  },
+  loseConnection: async () => {
+    const npc = await selectNpc();
+    await loseConnection(npc);
   },
 };
 
@@ -87,6 +98,16 @@ async function npc() {
         description:
           "This is a starforged move that will need to be... moved... at some point.",
         value: "makeAConnection",
+      },
+      {
+        title: "Mark Progress on Connection",
+        description: "Add some ticks to the progress boxes of a connection.",
+        value: "markProgress",
+      },
+      {
+        title: "Lose a Connection",
+        description: "Sometimes you just can't get along.",
+        value: "loseConnection",
       },
     ],
   });

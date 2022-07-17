@@ -7,7 +7,7 @@ const {
   deleteVow,
 } = require("../setters");
 const { selectVow } = require("../userPrompts");
-const { printVow } = require("../utils");
+const { printProgress } = require("../utils");
 
 async function createVow() {
   const { name, rank } = await prompts([
@@ -39,7 +39,7 @@ async function markProgress() {
 
 async function viewVow() {
   const vow = await selectVow();
-  printVow(vow);
+  printProgress(vow);
 }
 
 async function loseProgress() {
@@ -49,7 +49,10 @@ async function loseProgress() {
     name: "boxes",
     message: "How many boxes?",
   });
-  await loseProgressOnVow(vow.name, boxes);
+  await loseProgressOnVow({
+    name: vow.name,
+    boxes,
+  });
 }
 
 async function vows() {

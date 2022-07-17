@@ -85,7 +85,7 @@ const printDiceResults = ({
   return { challengeA, challengeB, action, bonus, result };
 };
 
-function printVow({ name, rank, progress }) {
+function printProgress({ name, rank, progress }) {
   console.log(`${name} (${rank}) - ${progress / 4}/10 boxes.`);
 }
 
@@ -95,5 +95,5 @@ module.exports = {
   rollDice,
   getDiceResults,
   printDiceResults,
-  printVow,
+  printProgress,
 };
