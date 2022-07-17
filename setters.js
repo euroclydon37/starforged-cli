@@ -77,6 +77,38 @@ async function increaseMomentum(amount = 0) {
   );
 }
 
+async function addLoreEntry(name, firstFact) {
+  const data = await readDb();
+
+  if (!data.lore) {
+    data.lore = {};
+  }
+
+  if (data.lore[name]) {
+    throw new Error("That lore entry already exists.");
+  }
+
+  data.lore[name] = {
+    name,
+    facts: [firstFact],
+    related_entries: [],
+  };
+  await writeDb(data);
+}
+
+async function addRelatedEntry(name, relatedName) {
+  const data = await readDb();
+  data.lore[name].related_entries.push(relatedName);
+  await writeDb(data);
+}
+
+async function addFact(entryName, fact = "") {
+  if (!fact) throw new Error("New fact not provided.");
+  const data = await readDb();
+  data.lore[entryName].facts.push(fact);
+  await writeDb(data);
+}
+
 module.exports = {
   createNewVow,
   deleteVow,
@@ -85,4 +117,7 @@ module.exports = {
   markProgressOnConnection,
   loseConnection,
   increaseMomentum,
+  addLoreEntry,
+  addRelatedEntry,
+  addFact,
 };

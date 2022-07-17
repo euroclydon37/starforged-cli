@@ -14,4 +14,9 @@ async function getNpc(name) {
   return data.npcs[name];
 }
 
-module.exports = { getCharacterStat, getNpc };
+async function getLoreEntry(name) {
+  const data = await readDb();
+  return data.lore[name];
+}
+
+module.exports = { getCharacterStat, getNpc, getLoreEntry };
