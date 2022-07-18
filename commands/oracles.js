@@ -1,53 +1,45 @@
 const prompts = require("prompts");
 const {
-  keys,
-  path,
-  pipe,
-  replace,
-  map,
-  compose,
-  not,
-  equals,
-  head,
-  split,
+    keys,
+    path,
+    pipe,
+    replace,
+    map,
+    compose,
+    not,
+    equals,
+    head,
+    split,
+    prop,
 } = require("ramda");
 const Tables = require("../oracles.json");
-const { getTableResult, randomInteger } = require("../utils");
+const {getTableResult, randomInteger} = require("../utils");
+const {starforged} = require("dataforged");
 
-const isTable = pipe(
-  keys,
-  head,
-  split("-"),
-  head,
-  Number,
-  compose(not, equals(NaN))
-);
+async function chooseOracle(oraclesAndCategories = []) {
+    const {index} = await prompts({
+        type: "select",
+        name: "index",
+        message: "Which table?",
+        choices: oraclesAndCategories.map(prop("Name")),
+    });
 
-const createChoice = (key) => ({
-  title: replace("_", " ")(key),
-  value: key,
-});
+    const choice = oraclesAndCategories[index];
 
-async function selectKey(targetPath = []) {
-  const result = await prompts({
-    type: "select",
-    name: "value",
-    message: "Which table?",
-    choices: pipe(path(targetPath), keys, map(createChoice))(Tables),
-  });
+    if (choice.Categories || choice.Oracles) {
+        return chooseOracle([
+            ...(choice.Categories ?? []),
+            ...(choice.Oracles ?? []),
+        ]);
+    }
 
-  const nextPath = [...targetPath, result.value];
-  const nestedValue = path(nextPath)(Tables);
+    const roll = randomInteger({max: 100})
 
-  return isTable(nestedValue)
-    ? getTableResult(randomInteger({ max: 100 }))(nestedValue)
-    : Array.isArray(nestedValue)
-    ? nestedValue[randomInteger({ max: nestedValue.length }) - 1]
-    : await selectKey(nextPath);
+    return choice.Table.find(({Floor, Ceiling}) => roll >= Floor && roll <= Ceiling).Result
 }
 
 async function runOracle() {
-  console.log(await selectKey());
+    console.log(await chooseOracle(starforged["Oracle Categories"]));
 }
 
-module.exports = { runOracle, isTable };
+module.exports = {runOracle};

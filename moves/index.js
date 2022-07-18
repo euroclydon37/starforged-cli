@@ -27,9 +27,9 @@ async function referenceAMove() {
     ),
   });
 
-  console.log(
-    marked(starforged["Move Categories"][categoryIndex].Moves[moveIndex].Text)
-  );
+  const move = starforged["Move Categories"][categoryIndex].Moves[moveIndex];
+
+  console.log(`\n${marked(`# ${move.Name}\n${move.Text}`)}`);
 }
 
 module.exports = { referenceAMove };

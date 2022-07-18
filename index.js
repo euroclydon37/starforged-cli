@@ -76,8 +76,6 @@ async function run() {
     ],
   });
 
-  console.log(commands);
-  console.log(referenceAMove);
   commands[response.command]();
 }
 

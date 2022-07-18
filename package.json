@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "format": "prettier -w ."
   },
   "keywords": [],
   "author": "",
@@ -16,5 +17,8 @@
     "marked-terminal": "^5.1.1",
     "prompts": "^2.4.2",
     "ramda": "^0.28.0"
+  },
+  "devDependencies": {
+    "prettier": "^2.7.1"
   }
 }
