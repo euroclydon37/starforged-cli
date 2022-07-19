@@ -84,11 +84,7 @@ async function chooseOracle(oraclesAndCategories = []) {
 
     const roll = randomInteger({max: 100})
 
-    function getResult(table) {
-        return table.find(({Floor, Ceiling}) => roll >= Floor && roll <= Ceiling).Result;
-    }
-
-    return getResult(choice.Table)
+    return choice.Table.find(({Floor, Ceiling}) => roll >= Floor && roll <= Ceiling).Result;
 }
 
 module.exports = {
