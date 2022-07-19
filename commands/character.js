@@ -1,8 +1,19 @@
 const prompts = require("prompts");
-const Assets = require("../assets.json");
 const { readDb, writeDb } = require("../db");
 const { increaseMomentum } = require("../setters");
 const { toTitle, printAsset } = require("../utils");
+const { selectAssetFromList, chooseAsset } = require("../userPrompts");
+const { starforged } = require("dataforged");
+const {
+  pipe,
+  filter,
+  prop,
+  equals,
+  last,
+  eqProps,
+  compose,
+  not,
+} = require("ramda");
 
 const makeCharacter = ({ name, edge, heart, iron, shadow, wits, assets }) => ({
   name,
@@ -38,46 +49,20 @@ async function createCharacter() {
     message: "What name would you like?",
   });
 
-  const firstPath = await prompts({
-    type: "select",
-    name: "name",
-    message: "Choose your first path.",
-    choices: Assets.filter(({ type }) => type === "PATH").map(({ name }) => ({
-      title: name,
-      value: name,
-    })),
-  });
+  const allPaths = pipe(
+    filter(pipe(prop("Name"), equals("Path"))),
+    last,
+    prop("Assets")
+  )(starforged["Asset Types"]);
 
-  const secondPath = await prompts({
-    type: "select",
-    name: "name",
-    message: "Choose your second path.",
-    choices: Assets.filter(
-      ({ type, name }) => type === "PATH" && name !== firstPath.name
-    ).map(({ name }) => ({ title: name, value: name })),
-  });
+  const starship = starforged["Asset Types"][0].Assets[0];
+  const firstPath = await selectAssetFromList(allPaths);
+  const secondPath = await selectAssetFromList(
+    allPaths.filter(compose(not, eqProps("Name", firstPath)))
+  );
+  const finalAsset = await chooseAsset();
 
-  const finalAsset = await prompts({
-    type: "select",
-    name: "name",
-    message: "Choose your final asset.",
-    choices: Assets.filter(
-      ({ type, name }) =>
-        type !== "DEED" &&
-        name !== firstPath.name &&
-        name !== secondPath.name &&
-        name !== "STARSHIP"
-    ).map(({ name }) => ({ title: name, value: name })),
-  });
-
-  const getAssetByName = (name) => Assets.find((a) => a.name === name);
-
-  const assets = [
-    Assets[0],
-    getAssetByName(firstPath.name),
-    getAssetByName(secondPath.name),
-    getAssetByName(finalAsset.name),
-  ];
+  const assets = [starship, firstPath, secondPath, finalAsset];
 
   const characterStats = {
     edge: undefined,
@@ -141,18 +126,7 @@ async function viewMeters() {
 
 async function viewAsset() {
   const data = await readDb();
-  const assets = require("../assets.json");
-  const { assetName } = await prompts({
-    type: "autocomplete",
-    name: "assetName",
-    message: "Which asset?",
-    choices: data.character.assets.map(({ name }) => ({
-      title: name,
-      value: name,
-    })),
-  });
-
-  const asset = assets.find((asset) => asset.name === assetName);
+  const asset = await selectAssetFromList(data.character.assets);
   printAsset(asset);
 }
 
