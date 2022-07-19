@@ -53,6 +53,10 @@ async function selectNpc() {
 async function selectVow() {
   const data = await readDb();
 
+  const vowTitles = Object.keys(data.vows);
+
+  if (!vowTitles.length) return;
+
   const { vowName } = await prompts({
     type: "autocomplete",
     name: "vowName",

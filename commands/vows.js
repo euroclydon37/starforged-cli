@@ -27,23 +27,31 @@ async function createVow() {
   await createNewVow({ name, rank });
 }
 
+function printNoVowsError() {
+  console.log("No vows have been sworn.");
+}
+
 async function abandonVow() {
   const vow = await selectVow();
+  if (!vow) return printNoVowsError();
   await deleteVow({ name: vow.name });
 }
 
 async function markProgress() {
   const vow = await selectVow();
+  if (!vow) return printNoVowsError();
   await markProgressOnVow(vow);
 }
 
 async function viewVow() {
   const vow = await selectVow();
+  if (!vow) return printNoVowsError();
   printProgress(vow);
 }
 
 async function loseProgress() {
   const vow = await selectVow();
+  if (!vow) return printNoVowsError();
   const { boxes } = await prompts({
     type: "number",
     name: "boxes",
