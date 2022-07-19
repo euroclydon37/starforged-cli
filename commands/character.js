@@ -1,7 +1,7 @@
 const prompts = require("prompts");
 const { readDb, writeDb } = require("../db");
 const { increaseMomentum } = require("../setters");
-const { toTitle, printAsset } = require("../utils");
+const { toTitle } = require("../utils");
 const { selectAssetFromList, chooseAsset } = require("../userPrompts");
 const { starforged } = require("dataforged");
 const {
@@ -13,7 +13,11 @@ const {
   eqProps,
   compose,
   not,
+  map,
+  join,
 } = require("ramda");
+const { getEnabledAbilities } = require("../selectors/assets.selectors");
+const { marked } = require("marked");
 
 const makeCharacter = ({ name, edge, heart, iron, shadow, wits, assets }) => ({
   name,
@@ -124,10 +128,18 @@ async function viewMeters() {
   console.log(data.character.meters);
 }
 
-async function viewAsset() {
+async function viewAbilities() {
   const data = await readDb();
   const asset = await selectAssetFromList(data.character.assets);
-  printAsset(asset);
+  console.log(
+    "\n",
+    pipe(
+      getEnabledAbilities,
+      map(pipe(prop("Text"), (x) => `- ${x}`)),
+      map(marked),
+      join("")
+    )(asset.Abilities)
+  );
 }
 
 async function manageCharacter() {
@@ -136,7 +148,7 @@ async function manageCharacter() {
     gainMomentum,
     viewStats,
     viewMeters,
-    viewAsset,
+    viewAbilities,
   };
 
   const { command } = await prompts({
