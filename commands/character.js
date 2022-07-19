@@ -1,6 +1,6 @@
 const prompts = require("prompts");
 const { readDb, writeDb } = require("../db");
-const { increaseMomentum } = require("../setters");
+const { setMomenum } = require("../setters");
 const { toTitle } = require("../utils");
 const { selectAssetFromList, chooseAsset } = require("../userPrompts");
 const { starforged } = require("dataforged");
@@ -18,6 +18,11 @@ const {
 } = require("ramda");
 const { getEnabledAbilities } = require("../selectors/assets.selectors");
 const { marked } = require("marked");
+const {
+  getMomentum,
+  getMomentumReset,
+  getMaxMomentum,
+} = require("../selectors/character.selectors");
 
 const makeCharacter = ({ name, edge, heart, iron, shadow, wits, assets }) => ({
   name,
@@ -106,16 +111,20 @@ async function createCharacter() {
   console.log(`Created character named ${name}`);
 }
 
-async function gainMomentum() {
+async function updateMomentum() {
+  const data = await readDb();
+  const momentum = getMomentum(data);
+  const reset = getMomentumReset(data);
+  const max = getMaxMomentum(data);
   const { amount } = await prompts({
     type: "number",
     name: "amount",
-    message: "How much momentum?",
+    message: `Your momentum was ${momentum()}. What would you like to set it to? (Reset ${reset}, Max ${max})`,
   });
 
-  await increaseMomentum(amount);
+  await setMomenum(amount);
 
-  console.log(`Gained ${amount} momentum!`);
+  console.log(`Your momentum is now ${amount}.`);
 }
 
 async function viewStats() {
@@ -145,7 +154,7 @@ async function viewAbilities() {
 async function manageCharacter() {
   const commands = {
     createCharacter,
-    gainMomentum,
+    updateMomentum,
     viewStats,
     viewMeters,
     viewAbilities,
