@@ -33,7 +33,7 @@ async function run() {
         value: "dice",
       },
       {
-        title: "Manage Vows",
+        title: "Vows",
         description: "Create, update, or delete vows.",
         value: "vows",
       },
@@ -49,12 +49,12 @@ async function run() {
         value: "npc",
       },
       {
-        title: "Manage Story",
+        title: "Story",
         description: "Add or view events in your story.",
         value: "story",
       },
       {
-        title: "Manage Lore",
+        title: "Lore",
         description: "Add, remove, or edit the lore of your universe.",
         value: "lore",
       },
@@ -69,7 +69,7 @@ async function run() {
         value: "readAsset",
       },
       {
-        title: "Manage Character",
+        title: "Character",
         description: "Create, update, or delete your character.",
         value: "manageCharacter",
       },
