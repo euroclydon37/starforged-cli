@@ -1,8 +1,9 @@
-const prompts = require("prompts");
 const { starforged } = require("dataforged");
 const { marked } = require("marked");
 const TerminalRenderer = require("marked-terminal");
 const chalk = require("chalk");
+const { autocompletePromptByIndex } = require("../userPrompts");
+const { prop } = require("ramda");
 
 marked.setOptions({
   renderer: new TerminalRenderer({
@@ -11,19 +12,15 @@ marked.setOptions({
 });
 
 async function referenceAMove() {
-  const { categoryIndex } = await prompts({
-    type: "select",
-    name: "categoryIndex",
+  const categoryIndex = await autocompletePromptByIndex({
     message: "Choose a category.",
-    choices: starforged["Move Categories"].map((category) => category.Name),
+    choices: starforged["Move Categories"].map(prop("Name")),
   });
 
-  const { moveIndex } = await prompts({
-    type: "select",
-    name: "moveIndex",
+  const moveIndex = await autocompletePromptByIndex({
     message: "Choose a move.",
     choices: starforged["Move Categories"][categoryIndex].Moves.map(
-      (move) => move.Name
+      prop("Name")
     ),
   });
 

@@ -19,7 +19,7 @@ async function autocompletePromptByIndex({ message, choices = [] }) {
 async function selectCharacterStat() {
   const data = await readDb();
   const { statName } = await prompts({
-    type: "select",
+    type: "autocomplete",
     name: "statName",
     message: "Which stat?",
     choices: Object.keys(data.character.stats).map((key) => ({
@@ -33,14 +33,9 @@ async function selectCharacterStat() {
 
 async function selectCharacterAsset() {
   const data = await readDb();
-  const { index } = await prompts({
-    type: "select",
-    name: "index",
+  const index = await autocompletePromptByIndex({
     message: "Which asset?",
-    choices: data.character.assets.map((asset, index) => ({
-      title: asset.name,
-      value: index,
-    })),
+    choices: data.character.assets.map(prop("Name")),
   });
   return data.character.assets[index];
 }
@@ -82,9 +77,7 @@ async function selectVow() {
 }
 
 async function chooseOracle(oraclesAndCategories = []) {
-  const { index } = await prompts({
-    type: "select",
-    name: "index",
+  const index = await autocompletePromptByIndex({
     message: "Which table?",
     choices: oraclesAndCategories.map(prop("Name")),
   });
@@ -117,20 +110,17 @@ async function selectAssetFromList(assets = []) {
 }
 
 async function chooseAsset() {
-  const { typeIndex } = await prompts([
-    {
-      type: "select",
-      name: "typeIndex",
-      message: "Pick a category.",
-      choices: starforged["Asset Types"].map(prop("Name")),
-    },
-  ]);
+  const typeIndex = await autocompletePromptByIndex({
+    message: "Pick a category",
+    choices: starforged["Asset Types"].map(prop("Name")),
+  });
 
   const category = starforged["Asset Types"][typeIndex];
   return selectAssetFromList(category.Assets);
 }
 
 module.exports = {
+  autocompletePromptByIndex,
   selectCharacterStat,
   selectCharacterAsset,
   selectNpc,

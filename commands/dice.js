@@ -1,7 +1,6 @@
 const prompts = require("prompts");
-const { has } = require("ramda");
 const { readDb, writeDb } = require("../db");
-const { selectCharacterStat, selectCharacterAsset } = require("../userPrompts");
+const { selectCharacterStat } = require("../userPrompts");
 const { getDiceResults, printDiceResults, rollDice } = require("../utils");
 
 const commands = {
@@ -33,7 +32,6 @@ const commands = {
     title: "Interpret Results",
     description: "Interpret the dice results, taking into account bonuses.",
     run: async () => {
-      const data = await readDb();
       const { isUsingActionDie } = await prompts({
         type: "select",
         name: "isUsingActionDie",
