@@ -1,7 +1,17 @@
 const prompts = require("prompts");
 const { getLoreEntry } = require("../getters");
-const { addFact, addLoreEntry, addRelatedEntry } = require("../setters");
+const { addFact, addLoreEntry, insertRelatedEntry } = require("../setters");
 const { getPropByPrompt } = require("../userPrompts");
+const { readDb } = require("../db");
+
+async function askForEntryName(message) {
+  const data = await readDb();
+  const entry = await getPropByPrompt({
+    message,
+    keyValueMap: data.lore,
+  });
+  return entry.name;
+}
 
 async function createLoreEntry() {
   const { name } = await prompts({
@@ -17,6 +27,15 @@ async function createLoreEntry() {
   });
 
   await addLoreEntry(name, firstFact);
+}
+
+async function addRelatedEntry() {
+  const targetEntryName = await askForEntryName(
+    "Which entry would you like to add to?"
+  );
+  const relatedEntryName = await askForEntryName("Which entry relates to it?");
+  await insertRelatedEntry(targetEntryName, relatedEntryName);
+  console.log("Related entry added.");
 }
 
 async function lore() {

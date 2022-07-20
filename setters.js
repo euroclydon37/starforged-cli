@@ -93,7 +93,7 @@ async function addLoreEntry(name, firstFact) {
   await writeDb(data);
 }
 
-async function addRelatedEntry(name, relatedName) {
+async function insertRelatedEntry(name, relatedName) {
   const data = await readDb();
   data.lore[name].related_entries.push(relatedName);
   await writeDb(data);
@@ -115,6 +115,6 @@ module.exports = {
   loseConnection,
   setMomenum,
   addLoreEntry,
-  addRelatedEntry,
+  insertRelatedEntry,
   addFact,
 };

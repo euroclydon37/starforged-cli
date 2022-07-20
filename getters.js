@@ -19,4 +19,4 @@ async function getLoreEntry(name) {
   return data.lore[name];
 }
 
-module.exports = { getCharacterStat, getNpc, getLoreEntry };
+module.exports = { getLoreEntry };
