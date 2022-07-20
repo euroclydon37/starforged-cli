@@ -1,7 +1,7 @@
 const prompts = require("prompts");
 const { getLoreEntry } = require("../getters");
 const { addFact, addLoreEntry, addRelatedEntry } = require("../setters");
-const { toTitle } = require("../utils");
+const { getPropByPrompt } = require("../userPrompts");
 
 async function createLoreEntry() {
   const { name } = await prompts({
@@ -27,17 +27,12 @@ async function lore() {
     addRelatedEntry,
   };
 
-  const { command } = await prompts({
-    type: "autocomplete",
-    name: "command",
+  const command = await getPropByPrompt({
     message: "Choose a command.",
-    choices: Object.keys(commands).map((key) => ({
-      title: toTitle(key),
-      value: key,
-    })),
+    keyValueMap: commands,
   });
 
-  await commands[command]();
+  await command();
 }
 
 module.exports = { lore };

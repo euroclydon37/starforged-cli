@@ -2,8 +2,22 @@ const prompts = require("prompts");
 const { readDb } = require("./db");
 const { getCharacterStat } = require("./getters");
 const { prop } = require("ramda");
-const { randomInteger } = require("./utils");
+const { randomInteger, toTitle } = require("./utils");
 const { starforged } = require("dataforged");
+
+async function getPropByPrompt({ message, keyValueMap }) {
+  const { key } = await prompts({
+    type: "autocomplete",
+    name: "key",
+    message,
+    choices: Object.keys(keyValueMap).map((key) => ({
+      title: toTitle(key),
+      value: key,
+    })),
+  });
+
+  return keyValueMap[key];
+}
 
 async function autocompletePromptByIndex({ message, choices = [] }) {
   const { indexString } = await prompts({
@@ -120,6 +134,7 @@ async function chooseAsset() {
 }
 
 module.exports = {
+  getPropByPrompt,
   autocompletePromptByIndex,
   selectCharacterStat,
   selectCharacterAsset,
