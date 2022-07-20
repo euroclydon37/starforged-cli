@@ -1,11 +1,11 @@
 const prompts = require("prompts");
 const { readDb, writeDb } = require("../db");
 const { setMomenum } = require("../setters");
-const { toTitle } = require("../utils");
 const {
   selectAssetFromList,
   chooseAsset,
   selectCharacterAsset,
+  getPropByPrompt,
 } = require("../userPrompts");
 const { starforged } = require("dataforged");
 const {
@@ -162,17 +162,12 @@ async function manageCharacter() {
     viewAbilities,
   };
 
-  const { command } = await prompts({
-    type: "autocomplete",
-    name: "command",
+  const command = await getPropByPrompt({
     message: "Choose a command.",
-    choices: Object.keys(commands).map((key) => ({
-      title: toTitle(key),
-      value: key,
-    })),
+    keyValueMap: commands,
   });
 
-  await commands[command]();
+  await command();
 }
 
 module.exports = { manageCharacter };

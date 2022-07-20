@@ -1,11 +1,14 @@
 const prompts = require("prompts");
 const { readDb } = require("./db");
-const { getCharacterStat } = require("./getters");
-const { prop } = require("ramda");
+const { prop, isEmpty } = require("ramda");
 const { randomInteger, toTitle } = require("./utils");
 const { starforged } = require("dataforged");
 
-async function getPropByPrompt({ message, keyValueMap }) {
+async function getPropByPrompt({
+  message,
+  keyValueMap,
+  map = (key, value) => value,
+}) {
   const { key } = await prompts({
     type: "autocomplete",
     name: "key",
@@ -16,7 +19,7 @@ async function getPropByPrompt({ message, keyValueMap }) {
     })),
   });
 
-  return keyValueMap[key];
+  return map(key, keyValueMap[key]);
 }
 
 async function autocompletePromptByIndex({ message, choices = [] }) {
@@ -32,17 +35,11 @@ async function autocompletePromptByIndex({ message, choices = [] }) {
 
 async function selectCharacterStat() {
   const data = await readDb();
-  const { statName } = await prompts({
-    type: "autocomplete",
-    name: "statName",
+  return getPropByPrompt({
     message: "Which stat?",
-    choices: Object.keys(data.character.stats).map((key) => ({
-      title: key,
-      value: key,
-    })),
+    keyValueMap: data.character.stats,
+    map: (key, value) => ({ name: key, value }),
   });
-
-  return await getCharacterStat(statName);
 }
 
 async function selectCharacterAsset() {
@@ -56,38 +53,19 @@ async function selectCharacterAsset() {
 
 async function selectNpc() {
   const data = await readDb();
-
-  const { name } = await prompts({
-    type: "autocomplete",
-    name: "name",
+  return getPropByPrompt({
     message: "Which NPC?",
-    choices: Object.keys(data.npcs).map((name) => ({
-      title: name,
-      value: name,
-    })),
+    keyValueMap: data.npcs,
   });
-
-  return data.npcs[name];
 }
 
 async function selectVow() {
   const data = await readDb();
-
-  const vowTitles = Object.keys(data.vows);
-
-  if (!vowTitles.length) return;
-
-  const { vowName } = await prompts({
-    type: "autocomplete",
-    name: "vowName",
+  if (isEmpty(data.vows)) return;
+  return getPropByPrompt({
     message: "Which Vow?",
-    choices: Object.keys(data.vows).map((name) => ({
-      title: name,
-      value: name,
-    })),
+    keyValueMap: data.vows,
   });
-
-  return data.vows[vowName];
 }
 
 async function chooseOracle(oraclesAndCategories = []) {
