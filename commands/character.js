@@ -1,6 +1,13 @@
 const prompts = require("prompts");
 const { readDb, writeDb } = require("../db");
-const { setMomenum } = require("../setters");
+const {
+  setMomentum,
+  setMomentumReset,
+  setMaxMomentum,
+  setHealth,
+  setSpirit,
+  setSupply,
+} = require("../setters");
 const {
   selectAssetFromList,
   chooseAsset,
@@ -26,6 +33,9 @@ const {
   getMomentum,
   getMomentumReset,
   getMaxMomentum,
+  getHealth,
+  getSpirit,
+  getSupply,
 } = require("../selectors/character.selectors");
 
 const makeCharacter = ({ name, edge, heart, iron, shadow, wits, assets }) => ({
@@ -126,9 +136,71 @@ async function updateMomentum() {
     message: `Your momentum was ${momentum}. What would you like to set it to? (Reset ${reset}, Max ${max})`,
   });
 
-  await setMomenum(amount);
+  const newAmount = Math.min(amount, max);
 
-  console.log(`Your momentum is now ${amount}.`);
+  await setMomentum(newAmount);
+
+  console.log(`Your momentum is now ${newAmount}.`);
+}
+
+async function updateMomentumReset() {
+  const data = await readDb();
+  const reset = getMomentumReset(data);
+  const { amount } = await prompts({
+    type: "number",
+    name: "amount",
+    message: `Your momentum reset was ${reset}. What would you like to set it to?`,
+  });
+  await setMomentumReset(amount);
+  console.log(`Your momentum reset is now ${amount}.`);
+}
+
+async function updateMaxMomentum() {
+  const data = await readDb();
+  const max = getMaxMomentum(data);
+  const { amount } = await prompts({
+    type: "number",
+    name: "amount",
+    message: `Your max momentum was ${max}. What would you like to set it to?`,
+  });
+  await setMaxMomentum(amount);
+  console.log(`Your max momentum is now ${amount}.`);
+}
+
+async function updateHealth() {
+  const data = await readDb();
+  const health = getHealth(data);
+  const { amount } = await prompts({
+    type: "number",
+    name: "amount",
+    message: `Your health was ${health}. What would you like to set it to?`,
+  });
+  await setHealth(amount);
+  console.log(`Your health is now ${amount}.`);
+}
+
+async function updateSpirit() {
+  const data = await readDb();
+  const spirit = getSpirit(data);
+  const { amount } = await prompts({
+    type: "number",
+    name: "amount",
+    message: `Your spirit was ${spirit}. What would you like to set it to?`,
+  });
+  await setSpirit(amount);
+  console.log(`Your spirit is now ${amount}.`);
+}
+
+async function updateSupply() {
+  const data = await readDb();
+  const supply = getSupply(data);
+  const { amount } = await prompts({
+    type: "number",
+    name: "amount",
+    message: `Your supply was ${supply}. What would you like to set it to?`,
+  });
+  await setSupply(amount);
+  console.log(`Your supply is now ${amount}.`);
 }
 
 async function viewStats() {
@@ -153,10 +225,28 @@ async function viewAbilities() {
   );
 }
 
+async function updateMeter() {
+  const commands = {
+    momentum: updateMomentum,
+    health: updateHealth,
+    spirit: updateSpirit,
+    supply: updateSupply,
+    maxMomentum: updateMaxMomentum,
+    momentumReset: updateMomentumReset,
+  };
+
+  const command = await getPropByPrompt({
+    message: "Which meter?",
+    keyValueMap: commands,
+  });
+
+  await command();
+}
+
 async function manageCharacter() {
   const commands = {
     createCharacter,
-    updateMomentum,
+    updateMeter,
     viewStats,
     viewMeters,
     viewAbilities,

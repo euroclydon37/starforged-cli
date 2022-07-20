@@ -68,11 +68,18 @@ async function loseConnection({ name }) {
   console.log(`Your connection to ${name} has been lost.`);
 }
 
-async function setMomenum(value = 0) {
+const updateMeter = (key) => async (value) => {
   const data = await readDb();
-  data.character.meters.momentum = value;
+  data.character.meters[key] = value;
   await writeDb(data);
-}
+};
+
+const setHealth = updateMeter("health");
+const setSpirit = updateMeter("spirit");
+const setSupply = updateMeter("supply");
+const setMomentum = updateMeter("momentum");
+const setMomentumReset = updateMeter("momentum_reset");
+const setMaxMomentum = updateMeter("max_momentum");
 
 async function addLoreEntry(name, firstFact) {
   const data = await readDb();
@@ -113,7 +120,12 @@ module.exports = {
   loseProgressOnVow,
   markProgressOnConnection,
   loseConnection,
-  setMomenum,
+  setHealth,
+  setSpirit,
+  setSupply,
+  setMomentum,
+  setMomentumReset,
+  setMaxMomentum,
   addLoreEntry,
   insertRelatedEntry,
   insertFact,
