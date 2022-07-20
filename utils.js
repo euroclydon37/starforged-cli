@@ -70,7 +70,7 @@ function printAsset(asset) {
     marked(
       [
         `# ${asset.Name}\n`,
-        `${asset.Requirement}\n`,
+        asset.Requirement ? `${asset.Requirement}\n` : "",
         asset.Abilities.map((ability) => `\n- ${ability.Text}`).join(""),
       ].join("")
     )

@@ -5,6 +5,17 @@ const { prop } = require("ramda");
 const { randomInteger } = require("./utils");
 const { starforged } = require("dataforged");
 
+async function autocompletePromptByIndex({ message, choices = [] }) {
+  const { indexString } = await prompts({
+    type: "autocomplete",
+    name: "indexString",
+    message,
+    choices: choices.map((title, index) => ({ title, value: String(index) })),
+  });
+
+  return Number(indexString);
+}
+
 async function selectCharacterStat() {
   const data = await readDb();
   const { statName } = await prompts({
@@ -95,14 +106,14 @@ async function chooseOracle(oraclesAndCategories = []) {
 }
 
 async function selectAssetFromList(assets = []) {
-  const { assetIndex } = await prompts({
-    type: "select",
-    name: "assetIndex",
+  const index = await autocompletePromptByIndex({
     message: "Pick an asset.",
     choices: assets.map(prop("Name")),
   });
 
-  return assets[assetIndex];
+  console.log("Index is", index);
+
+  return assets[index];
 }
 
 async function chooseAsset() {
