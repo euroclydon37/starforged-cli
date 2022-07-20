@@ -99,7 +99,7 @@ async function insertRelatedEntry(name, relatedName) {
   await writeDb(data);
 }
 
-async function addFact(entryName, fact = "") {
+async function insertFact(entryName, fact = "") {
   if (!fact) throw new Error("New fact not provided.");
   const data = await readDb();
   data.lore[entryName].facts.push(fact);
@@ -116,5 +116,5 @@ module.exports = {
   setMomenum,
   addLoreEntry,
   insertRelatedEntry,
-  addFact,
+  insertFact,
 };
