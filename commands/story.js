@@ -36,7 +36,7 @@ const commands = {
 
 async function story() {
   const response = await prompts({
-    type: "select",
+    type: "autocomplete",
     name: "command",
     message: "And now what?",
     choices: [

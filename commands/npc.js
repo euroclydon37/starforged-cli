@@ -84,7 +84,7 @@ const commands = {
 
 async function npc() {
   const response = await prompts({
-    type: "select",
+    type: "autocomplete",
     name: "command",
     message: "What do you want to do?",
     choices: [

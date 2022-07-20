@@ -23,7 +23,7 @@ const commands = {
 
 async function run() {
   const response = await prompts({
-    type: "select",
+    type: "autocomplete",
     name: "command",
     message: "Choose a command.",
     choices: [

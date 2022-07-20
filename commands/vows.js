@@ -73,7 +73,7 @@ async function vows() {
   };
 
   const { command } = await prompts({
-    type: "select",
+    type: "autocomplete",
     name: "command",
     message: "Choose a command.",
     choices: [

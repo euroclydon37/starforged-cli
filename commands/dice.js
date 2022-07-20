@@ -87,7 +87,7 @@ const commands = {
 
 async function dice() {
   const response = await prompts({
-    type: "select",
+    type: "autocomplete",
     name: "command",
     message: "Choose a command.",
     choices: Object.keys(commands).map((key) => {
