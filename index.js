@@ -38,7 +38,7 @@ async function run() {
         value: "vows",
       },
       {
-        title: "Reference a move",
+        title: "Moves",
         description:
           "Reference one of Starforged many moves and progress the story.",
         value: "referenceAMove",

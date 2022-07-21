@@ -21,7 +21,6 @@ const {
   prop,
   equals,
   last,
-  eqProps,
   compose,
   not,
   map,
@@ -38,7 +37,12 @@ const {
   getSupply,
   getCharacterAssets,
   getCharacter,
+  getLegacyTracks,
+  getEarnedXP,
+  getSpentXP,
+  getAvailableXP,
 } = require("../selectors/character.selectors");
+const { toTitle } = require("../utils");
 
 const makeCharacter = ({ name, edge, heart, iron, shadow, wits, assets }) => ({
   name,
@@ -273,18 +277,69 @@ async function upgradeAsset() {
     ),
   });
 
-  data.character.assets.forEach(a => {
+  data.character.assets.forEach((a) => {
     if (a.Name === asset.Name) {
-      a.Abilities.forEach(ability => {
+      a.Abilities.forEach((ability) => {
         if (ability.Text === abilityText) {
-          ability.Enabled = true
+          ability.Enabled = true;
         }
-      })
+      });
     }
-  })
+  });
 
   await writeDb(data);
   console.log("Ability learned.");
+}
+
+async function markTickOnLegacyTrack() {
+  const data = await readDb();
+  const legacyTracks = getLegacyTracks(data);
+
+  const track = await getPropByPrompt({
+    message: "Which legacy track?",
+    keyValueMap: legacyTracks,
+    map: (key, value) => ({ name: key, value }),
+  });
+
+  const { tickCount } = await prompts({
+    type: "number",
+    name: "tickCount",
+    message: "How many ticks do you want to mark?",
+  });
+
+  track.value.ticks += tickCount;
+  await writeDb(data);
+
+  console.log(
+    `${tickCount} ticks have been marked on your ${toTitle(
+      track.name
+    )} legacy track`
+  );
+}
+
+async function viewExperience() {
+  const data = await readDb();
+  console.log(`You've earned ${getEarnedXP(data)} xp.`);
+  console.log(`You've spent ${getSpentXP(data)} xp.`);
+  console.log(`You have ${getAvailableXP(data)} xp remaining.`);
+}
+
+async function spendExperience() {
+  const data = await readDb();
+  const { amount } = await prompts({
+    type: "number",
+    name: "amount",
+    message: "How much xp are you spending?",
+  });
+
+  if (amount > getAvailableXP(data)) {
+    console.log(`You only have ${getAvailableXP(data)} xp.`);
+    return;
+  }
+
+  data.character.legacy.spent_xp += amount;
+  await writeDb(data);
+  console.log(`You now have ${getAvailableXP(data)} xp available.`);
 }
 
 async function manageCharacter() {
@@ -294,8 +349,11 @@ async function manageCharacter() {
     viewStats,
     viewMeters,
     viewAbilities,
+    viewExperience,
     addAsset,
     upgradeAsset,
+    markTickOnLegacyTrack,
+    spendExperience,
   };
 
   const command = await getPropByPrompt({

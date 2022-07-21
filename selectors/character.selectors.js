@@ -1,4 +1,14 @@
-const { path } = require("ramda");
+const {
+  path,
+  pipe,
+  values,
+  prop,
+  reduce,
+  add,
+  map,
+  divide,
+  __,
+} = require("ramda");
 
 const getHealth = path(["character", "meters", "health"]);
 const getSpirit = path(["character", "meters", "spirit"]);
@@ -9,6 +19,29 @@ const getMaxMomentum = path(["character", "meters", "max_momentum"]);
 
 const getCharacterAssets = path(["character", "assets"]);
 const getCharacter = path(["character"]);
+const getLegacyTracks = path(["character", "legacy", "tracks"]);
+
+const log = (label) => (value) => {
+  console.log(label, value);
+  return value;
+};
+
+const getEarnedXP = pipe(
+  getLegacyTracks,
+  values,
+  map(prop("ticks")),
+  reduce(add, 0),
+  divide(__, 4),
+  Math.floor
+);
+
+const getSpentXP = path(["character", "legacy", "spent_xp"]);
+
+const getAvailableXP = (data) => {
+  const earned = getEarnedXP(data);
+  const spent = getSpentXP(data);
+  return earned - spent;
+};
 
 module.exports = {
   getHealth,
@@ -19,4 +52,8 @@ module.exports = {
   getMaxMomentum,
   getCharacter,
   getCharacterAssets,
+  getLegacyTracks,
+  getEarnedXP,
+  getSpentXP,
+  getAvailableXP,
 };
