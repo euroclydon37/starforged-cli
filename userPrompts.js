@@ -1,6 +1,6 @@
 const prompts = require("prompts");
 const { readDb } = require("./db");
-const { prop, isEmpty } = require("ramda");
+const { prop, isEmpty, not } = require("ramda");
 const { randomInteger, toTitle } = require("./utils");
 const { starforged } = require("dataforged");
 
@@ -96,19 +96,23 @@ async function selectAssetFromList(assets = []) {
     choices: assets.map(prop("Name")),
   });
 
-  console.log("Index is", index);
-
   return assets[index];
 }
 
-async function chooseAsset() {
+async function chooseAsset(exclude = []) {
+  const validCategoryOptions = starforged["Asset Types"].filter((category) =>
+    category.Assets.some((asset) => not(exclude.includes(asset.Name)))
+  );
+
   const typeIndex = await autocompletePromptByIndex({
     message: "Pick a category",
-    choices: starforged["Asset Types"].map(prop("Name")),
+    choices: validCategoryOptions.map(prop("Name")),
   });
 
-  const category = starforged["Asset Types"][typeIndex];
-  return selectAssetFromList(category.Assets);
+  const category = validCategoryOptions[typeIndex];
+  return selectAssetFromList(
+    category.Assets.filter((asset) => not(exclude.includes(asset.Name)))
+  );
 }
 
 module.exports = {

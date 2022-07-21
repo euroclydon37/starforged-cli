@@ -36,6 +36,7 @@ const {
   getHealth,
   getSpirit,
   getSupply,
+  getCharacterAssets, getCharacter,
 } = require("../selectors/character.selectors");
 
 const makeCharacter = ({ name, edge, heart, iron, shadow, wits, assets }) => ({
@@ -65,6 +66,11 @@ const makeCharacter = ({ name, edge, heart, iron, shadow, wits, assets }) => ({
   assets,
 });
 
+const nameIsNot =
+  (name) =>
+  ({ Name }) =>
+    not(equals(name, Name));
+
 async function createCharacter() {
   const { name } = await prompts({
     type: "text",
@@ -81,7 +87,7 @@ async function createCharacter() {
   const starship = starforged["Asset Types"][0].Assets[0];
   const firstPath = await selectAssetFromList(allPaths);
   const secondPath = await selectAssetFromList(
-    allPaths.filter(compose(not, eqProps("Name", firstPath)))
+    allPaths.filter(nameIsNot(firstPath.Name))
   );
   const finalAsset = await chooseAsset();
 
@@ -243,6 +249,16 @@ async function updateMeter() {
   await command();
 }
 
+async function addAsset() {
+  const data = await readDb();
+  const asset = await chooseAsset(
+    getCharacterAssets(data).map(({ Name }) => Name)
+  );
+  getCharacter(data).assets.push(asset);
+  await writeDb(data);
+  console.log(`${asset.Name} was added.`)
+}
+
 async function manageCharacter() {
   const commands = {
     createCharacter,
@@ -250,6 +266,7 @@ async function manageCharacter() {
     viewStats,
     viewMeters,
     viewAbilities,
+    addAsset,
   };
 
   const command = await getPropByPrompt({
