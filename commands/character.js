@@ -36,7 +36,8 @@ const {
   getHealth,
   getSpirit,
   getSupply,
-  getCharacterAssets, getCharacter,
+  getCharacterAssets,
+  getCharacter,
 } = require("../selectors/character.selectors");
 
 const makeCharacter = ({ name, edge, heart, iron, shadow, wits, assets }) => ({
@@ -256,7 +257,34 @@ async function addAsset() {
   );
   getCharacter(data).assets.push(asset);
   await writeDb(data);
-  console.log(`${asset.Name} was added.`)
+  console.log(`${asset.Name} was added.`);
+}
+
+async function upgradeAsset() {
+  const data = await readDb();
+  const asset = await selectCharacterAsset();
+
+  const { abilityText } = await prompts({
+    type: "select",
+    name: "abilityText",
+    message: "Which ability do you want?",
+    choices: asset.Abilities.filter(compose(not, prop("Enabled"))).map(
+      ({ Text }) => ({ title: Text, value: Text })
+    ),
+  });
+
+  data.character.assets.forEach(a => {
+    if (a.Name === asset.Name) {
+      a.Abilities.forEach(ability => {
+        if (ability.Text === abilityText) {
+          ability.Enabled = true
+        }
+      })
+    }
+  })
+
+  await writeDb(data);
+  console.log("Ability learned.");
 }
 
 async function manageCharacter() {
@@ -267,6 +295,7 @@ async function manageCharacter() {
     viewMeters,
     viewAbilities,
     addAsset,
+    upgradeAsset,
   };
 
   const command = await getPropByPrompt({

@@ -8,7 +8,7 @@ const getMomentumReset = path(["character", "meters", "momentum_reset"]);
 const getMaxMomentum = path(["character", "meters", "max_momentum"]);
 
 const getCharacterAssets = path(["character", "assets"]);
-const getCharacter = path(["character"])
+const getCharacter = path(["character"]);
 
 module.exports = {
   getHealth,
