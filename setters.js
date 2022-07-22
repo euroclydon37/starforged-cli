@@ -1,6 +1,7 @@
 const { progressIncrements } = require("./constants");
 const { readDb, writeDb } = require("./db");
 const { printProgress } = require("./utils");
+const { pipe, append, uniq } = require("ramda");
 
 async function createNewVow({ name, rank }) {
   const data = await readDb();
@@ -102,14 +103,20 @@ async function addLoreEntry(name, firstFact) {
 
 async function insertRelatedEntry(name, relatedName) {
   const data = await readDb();
-  data.lore[name].related_entries.push(relatedName);
+  data.lore[name].related_entries = pipe(
+    append(relatedName),
+    uniq
+  )(data.lore[name].related_entries);
   await writeDb(data);
 }
 
 async function insertFact(entryName, fact = "") {
   if (!fact) throw new Error("New fact not provided.");
   const data = await readDb();
-  data.lore[entryName].facts.push(fact);
+  data.lore[entryName].facts = pipe(
+    append(fact),
+    uniq
+  )(data.lore[entryName].facts);
   await writeDb(data);
 }
 
