@@ -21,10 +21,7 @@ const getCharacterAssets = path(["character", "assets"]);
 const getCharacter = path(["character"]);
 const getLegacyTracks = path(["character", "legacy", "tracks"]);
 
-const log = (label) => (value) => {
-  console.log(label, value);
-  return value;
-};
+const getCharacterItems = path(["character", "items"]);
 
 const getEarnedXP = pipe(
   getLegacyTracks,
@@ -56,4 +53,5 @@ module.exports = {
   getEarnedXP,
   getSpentXP,
   getAvailableXP,
+  getCharacterItems,
 };

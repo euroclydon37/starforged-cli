@@ -13,6 +13,7 @@ const {
   chooseAsset,
   selectCharacterAsset,
   getPropByPrompt,
+  autocompletePromptByIndex,
 } = require("../userPrompts");
 const { starforged } = require("dataforged");
 const {
@@ -25,6 +26,7 @@ const {
   not,
   map,
   join,
+  remove,
 } = require("ramda");
 const { getEnabledAbilities } = require("../selectors/assets.selectors");
 const { marked } = require("marked");
@@ -41,6 +43,7 @@ const {
   getEarnedXP,
   getSpentXP,
   getAvailableXP,
+  getCharacterItems,
 } = require("../selectors/character.selectors");
 const { toTitle } = require("../utils");
 
@@ -342,6 +345,38 @@ async function spendExperience() {
   console.log(`You now have ${getAvailableXP(data)} xp available.`);
 }
 
+async function viewItems() {
+  const data = await readDb();
+  console.log(getCharacterItems(data));
+}
+
+async function addItem() {
+  const { itemString } = await prompts({
+    type: "text",
+    name: "itemString",
+    message: "What item do you want to add?",
+  });
+
+  const data = await readDb();
+
+  data.character.items.push(itemString);
+  await writeDb(data);
+  console.log("Item added.");
+}
+
+async function removeItem() {
+  const data = await readDb();
+
+  const index = await autocompletePromptByIndex({
+    message: "Which item would you like to remove?",
+    choices: getCharacterItems(data),
+  });
+
+  data.character.items = remove(index, 1, getCharacterItems(data));
+  await writeDb(data);
+  console.log("Item removed.");
+}
+
 async function manageCharacter() {
   const commands = {
     createCharacter,
@@ -349,6 +384,9 @@ async function manageCharacter() {
     viewStats,
     viewMeters,
     viewAbilities,
+    viewItems,
+    addItem,
+    removeItem,
     viewExperience,
     addAsset,
     upgradeAsset,
