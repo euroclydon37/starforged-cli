@@ -1,3 +1,5 @@
+#! /usr/bin/env node
+
 const prompts = require("prompts");
 const { dice } = require("./commands/dice");
 const { readAsset } = require("./commands/assets");

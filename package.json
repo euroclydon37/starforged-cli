@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "bin": {
+    "rpg": "index.js"
+  },
   "scripts": {
     "start": "node index.js",
     "format": "prettier -w ."
