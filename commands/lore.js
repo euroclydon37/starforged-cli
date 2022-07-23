@@ -16,7 +16,7 @@ async function askForEntryName(message) {
   return entry.name;
 }
 
-async function printEntry() {
+async function readEntry() {
   const entryName = await askForEntryName(
     "Which entry do you want to know about?"
   );
@@ -104,7 +104,7 @@ async function deleteFact() {
 
 async function lore() {
   const commands = {
-    printEntry,
+    readEntry,
     addFact,
     editFact,
     deleteFact,
