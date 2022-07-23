@@ -1,5 +1,4 @@
 const prompts = require("prompts");
-const { getLoreEntry } = require("../getters");
 const { insertFact, addLoreEntry, insertRelatedEntry } = require("../setters");
 const {
   getPropByPrompt,
@@ -17,12 +16,12 @@ async function askForEntryName(message) {
   return entry.name;
 }
 
-async function listFactsForEntry() {
+async function printEntry() {
   const entryName = await askForEntryName(
     "Which entry do you want to know about?"
   );
   const data = await readDb();
-  console.log(data.lore[entryName].facts);
+  console.log(data.lore[entryName]);
 }
 
 async function createLoreEntry() {
@@ -105,7 +104,7 @@ async function deleteFact() {
 
 async function lore() {
   const commands = {
-    listFactsForEntry,
+    printEntry,
     addFact,
     editFact,
     deleteFact,
