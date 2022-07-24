@@ -2,6 +2,11 @@
 
 My goal is for this to be an easy-to-use CLI for playing Starforged solo. If your game ends up in a broken state of some sort, and no command yet exists to fix your issue, all of the game data you accumulate is stored in `~/starforged-cli/db.json` and you can make edits there.
 
+To use the utility, it's as simple as running the `rpg` command.
+```shell
+rpg
+```
+
 ## Commands
 1. **Dice** - `Roll Dice` and then `Interpret Results`. I separated them to make it simple to manage dice re-rolls.
 2. **Vows** - Manage your vows.
