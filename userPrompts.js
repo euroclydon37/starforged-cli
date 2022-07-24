@@ -33,6 +33,17 @@ async function autocompletePromptByIndex({ message, choices = [] }) {
   return Number(indexString);
 }
 
+async function autocompleteMultiSelectPromptByIndex({ message, choices = [] }) {
+  const { indexStrings } = await prompts({
+    type: "autocompleteMultiselect",
+    name: "indexStrings",
+    message,
+    choices: choices.map((title, index) => ({ title, value: String(index) })),
+  });
+
+  return indexStrings.map(Number);
+}
+
 async function selectCharacterStat() {
   const data = await readDb();
   return getPropByPrompt({
@@ -68,26 +79,34 @@ async function selectVow() {
   });
 }
 
-async function chooseOracle(oraclesAndCategories = []) {
-  const index = await autocompletePromptByIndex({
+async function getResultsFromOracles(oraclesAndCategories = []) {
+  const indices = await autocompleteMultiSelectPromptByIndex({
     message: "Which table?",
     choices: oraclesAndCategories.map(prop("Name")),
   });
 
-  const choice = oraclesAndCategories[index];
+  const choices = indices.map((index) => oraclesAndCategories[index]);
 
-  if (choice.Categories || choice.Oracles) {
-    return chooseOracle([
-      ...(choice.Categories ?? []),
-      ...(choice.Oracles ?? []),
-    ]);
+  const results = [];
+
+  for (const choice of choices) {
+    const roll = randomInteger({ max: 100 });
+
+    results.push({
+      name: choice.Name,
+      value:
+        choice.Categories || choice.Oracles
+          ? await getResultsFromOracles([
+              ...(choice.Categories ?? []),
+              ...(choice.Oracles ?? []),
+            ])
+          : choice.Table.find(
+              ({ Floor, Ceiling }) => roll >= Floor && roll <= Ceiling
+            ).Result,
+    });
   }
 
-  const roll = randomInteger({ max: 100 });
-
-  return choice.Table.find(
-    ({ Floor, Ceiling }) => roll >= Floor && roll <= Ceiling
-  ).Result;
+  return results;
 }
 
 async function selectAssetFromList(assets = []) {
@@ -122,7 +141,7 @@ module.exports = {
   selectCharacterAsset,
   selectNpc,
   selectVow,
-  chooseOracle,
+  getResultsFromOracles,
   selectAssetFromList,
   chooseAsset,
 };

@@ -1,10 +1,16 @@
 require("prompts");
 
 const { starforged } = require("dataforged");
-const { chooseOracle } = require("../userPrompts");
+const { getResultsFromOracles } = require("../userPrompts");
 
 async function runOracle() {
-  console.log(await chooseOracle(starforged["Oracle Categories"]));
+  console.log(
+    JSON.stringify(
+      await getResultsFromOracles(starforged["Oracle Categories"]),
+      null,
+      2
+    )
+  );
 }
 
 module.exports = { runOracle };
