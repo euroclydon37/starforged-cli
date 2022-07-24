@@ -34,30 +34,27 @@ async function deleteVow({ name }) {
 
 async function markProgressOnVow({ name, rank }) {
   const data = await readDb();
-  const newProgressValue = Math.min(
+  data.vows[name].progress = Math.min(
     data.vows[name].progress + progressIncrements[rank],
     40
   );
-  data.vows[name].progress = newProgressValue;
   await writeDb(data);
   printProgress(data.vows[name]);
 }
 
 async function loseProgressOnVow({ name, boxes = 0 }) {
   const data = await readDb();
-  const newProgressValue = data.vows[name].progress - boxes * 4;
-  data.vows[name].progress = newProgressValue;
+  data.vows[name].progress = data.vows[name].progress - boxes * 4;
   await writeDb(data);
   printProgress(data.vows[name]);
 }
 
 async function markProgressOnConnection({ name, rank }) {
   const data = await readDb();
-  const newProgressValue = Math.min(
+  data.npcs[name].progress = Math.min(
     data.npcs[name].progress + progressIncrements[rank],
     40
   );
-  data.npcs[name].progress = newProgressValue;
   await writeDb(data);
   printProgress(data.npcs[name]);
 }
