@@ -10,7 +10,7 @@
     "start": "node index.js",
     "format": "prettier -w ."
   },
-  "keywords": [],
+  "keywords": ["starforged", "rpg", "solo", "game"],
   "author": "",
   "license": "ISC",
   "dependencies": {
