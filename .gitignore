@@ -2,3 +2,4 @@ node_modules
 *.txt
 .idea
 /data.json
+/dist/

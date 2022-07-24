@@ -8,7 +8,8 @@
   },
   "scripts": {
     "start": "node src/index.js",
-    "format": "prettier -w ."
+    "format": "prettier -w .",
+    "build": "webpack"
   },
   "keywords": [],
   "author": "",
