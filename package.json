@@ -1,6 +1,6 @@
 {
   "name": "starforged-cli",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "",
   "main": "index.js",
   "bin": {
@@ -10,7 +10,12 @@
     "start": "node index.js",
     "format": "prettier -w ."
   },
-  "keywords": ["starforged", "rpg", "solo", "game"],
+  "keywords": [
+    "starforged",
+    "rpg",
+    "solo",
+    "game"
+  ],
   "author": "",
   "license": "ISC",
   "dependencies": {
