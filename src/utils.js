@@ -1,10 +1,10 @@
-const { sort } = require("ramda");
+const { sort, trim } = require("ramda");
 const { readDb, writeDb } = require("./db");
 const { marked } = require("marked");
 
 const toTitle = (camelCase) => {
   const result = camelCase.replace(/([A-Z])/g, " $1");
-  return result.charAt(0).toUpperCase() + result.slice(1);
+  return trim(result.charAt(0).toUpperCase() + result.slice(1));
 };
 
 const randomInteger = ({ max }) => Math.floor(Math.random() * max) + 1;

@@ -98,12 +98,19 @@ async function addLoreEntry(name, firstFact) {
   await writeDb(data);
 }
 
-async function insertRelatedEntry(name, relatedName) {
+async function relateTwoEntries(entryNameOne, entryNameTwo) {
   const data = await readDb();
-  data.lore[name].related_entries = pipe(
-    append(relatedName),
+  // Add the relationship in one direction
+  data.lore[entryNameOne].related_entries = pipe(
+    append(entryNameTwo),
     uniq
-  )(data.lore[name].related_entries);
+  )(data.lore[entryNameOne].related_entries);
+
+  // Add the relationship in the other direction
+  data.lore[entryNameTwo].related_entries = pipe(
+    append(entryNameOne),
+    uniq
+  )(data.lore[entryNameTwo].related_entries);
   await writeDb(data);
 }
 
@@ -131,6 +138,6 @@ module.exports = {
   setMomentumReset,
   setMaxMomentum,
   addLoreEntry,
-  insertRelatedEntry,
+  relateTwoEntries,
   insertFact,
 };

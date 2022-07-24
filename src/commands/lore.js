@@ -1,5 +1,5 @@
 const prompts = require("prompts");
-const { insertFact, addLoreEntry, insertRelatedEntry } = require("../setters");
+const { insertFact, addLoreEntry, relateTwoEntries } = require("../setters");
 const {
   getPropByPrompt,
   autocompletePromptByIndex,
@@ -40,12 +40,10 @@ async function createLoreEntry() {
   await addLoreEntry(name, firstFact);
 }
 
-async function addRelatedEntry() {
-  const targetEntryName = await askForEntryName(
-    "Which entry would you like to add to?"
-  );
-  const relatedEntryName = await askForEntryName("Which entry relates to it?");
-  await insertRelatedEntry(targetEntryName, relatedEntryName);
+async function addRelationship() {
+  const entryNameOne = await askForEntryName("Choose an entry.");
+  const entryNameTwo = await askForEntryName("Which entry relates to it?");
+  await relateTwoEntries(entryNameOne, entryNameTwo);
   console.log("Related entry added.");
 }
 
@@ -109,7 +107,7 @@ async function lore() {
     editFact,
     deleteFact,
     createLoreEntry,
-    addRelatedEntry,
+    relateTwoEntries: addRelationship,
   };
 
   const command = await getPropByPrompt({
