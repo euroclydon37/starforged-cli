@@ -12,8 +12,7 @@
   },
   "scripts": {
     "start": "node src/index.js",
-    "format": "prettier -w .",
-    "release": "OTP=\"op://Personal/NPM/Section_59AC9459AEB2408DB092639475629CFD/one-time password\" op run -- npm publish --otp=$OTP"
+    "format": "prettier -w ."
   },
   "keywords": [
     "starforged",
