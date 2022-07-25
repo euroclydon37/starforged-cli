@@ -6,14 +6,20 @@ To use the utility, it's as simple as running the `rpg` command.
 ```shell
 rpg
 ```
-
+---
 ## Commands
-1. **Dice** - `Roll Dice` and then `Interpret Results`. I separated them to make it simple to manage dice re-rolls.
-2. **Vows** - Manage your vows.
-3. **Moves** - Find and print moves to the console for reference.
-4. **NPC** - Manage NPCs and their connections.
-5. **Story** - This is for adding journal entries of the events in your story.
-6. **Lore** - This is a utility for tracking entities in your universe and the facts (and other entities) associated with them.
-7. **Oracle** - Make wonderful use of all the random tables in Starforged.
-8. **Assets** - Find and print assets to the console for reference.
-9. **Character** - This is where most of the work is done. Create and manage your character. Update your health, etc.
+**Dice** - _`Roll Dice` and then `Interpret Results`. I separated them to make it simple to manage dice re-rolls._<br>
+**Vows** - _Manage your vows._<br>
+**Moves** - _Find and print moves to the console for reference._<br>
+**NPC** - _Manage NPCs and their connections._<br>
+**Story** - _This is for adding journal entries of the events in your story._<br>
+**Lore** - _This is a utility for tracking entities in your universe and the facts (and other entities) associated with them._<br>
+**Oracle** - _Make wonderful use of all the random tables in Starforged._<br>
+**Assets** - _Find and print assets to the console for reference._<br>
+**Character** - _This is where most of the work is done. Create and manage your character. Update your health, etc._<br>
+
+---
+## Feature Roadmap
+Feel free to request features by opening an issue. This is what I currently want to add.
+1. Support creating multiple characters (in the same universe) and switching between them.
+2. Support multiple universes with their own lore, characters, etc.
