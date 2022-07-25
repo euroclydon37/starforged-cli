@@ -3,6 +3,10 @@
   "version": "0.5.0",
   "description": "",
   "main": "src/index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/euroclydon37/starforged-cli.git"
+  },
   "bin": {
     "rpg": "src/index.js"
   },
