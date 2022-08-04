@@ -1,3 +1,4 @@
+//#region Requires
 const prompts = require("prompts");
 const { readDb, writeDb } = require("../db");
 const {
@@ -46,7 +47,10 @@ const {
   getCharacterItems,
 } = require("../selectors/character.selectors");
 const { toTitle } = require("../utils");
+//#endregion
 
+//#region functions
+//#region utilities
 const makeCharacter = ({ name, edge, heart, iron, shadow, wits, assets }) => ({
   name,
   stats: {
@@ -64,11 +68,13 @@ const makeCharacter = ({ name, edge, heart, iron, shadow, wits, assets }) => ({
     momentum_reset: 2,
     max_momentum: 10,
   },
-  legacy_tracks: {
-    quests: 0,
-    bonds: 0,
-    discoveries: 0,
-    xp: 0,
+  legacy: {
+    tracks: {
+      quests: 0,
+      bonds: 0,
+      discoveries: 0,
+    },
+    spent_xp: 0,
   },
   items: [],
   assets,
@@ -78,6 +84,7 @@ const nameIsNot =
   (name) =>
   ({ Name }) =>
     not(equals(name, Name));
+//#endregion
 
 async function createCharacter() {
   const { name } = await prompts({
@@ -376,6 +383,7 @@ async function removeItem() {
   await writeDb(data);
   console.log("Item removed.");
 }
+//#endregion
 
 async function manageCharacter() {
   const commands = {

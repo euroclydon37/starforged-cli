@@ -10,6 +10,8 @@ const { npc } = require("./commands/npc");
 const { runOracle } = require("./commands/oracles");
 const { vows } = require("./commands/vows");
 const { lore } = require("./commands/lore");
+const { readDb, writeDb } = require("./db");
+const { getCharacter } = require("./selectors/character.selectors");
 
 const commands = {
   dice,
@@ -24,6 +26,26 @@ const commands = {
 };
 
 async function run() {
+  const data = await readDb();
+  const character = getCharacter(data);
+  if (character.legacy_tracks) {
+    console.log(
+      "Update character legacy tracks to new format. Marking these tracks and viewing/spending experience should work correctly now."
+    );
+    character.legacy = {
+      tracks: {
+        quests: character.legacy_tracks.quests,
+        bonds: character.legacy_tracks.bonds,
+        discoveries: character.legacy_tracks.discoveries,
+      },
+      spent_xp: 0,
+    };
+
+    delete character.legacy_tracks;
+
+    await writeDb(data);
+  }
+
   const response = await prompts({
     type: "autocomplete",
     name: "command",

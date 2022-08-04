@@ -1,14 +1,6 @@
-const {
-  path,
-  pipe,
-  values,
-  prop,
-  reduce,
-  add,
-  map,
-  divide,
-  __,
-} = require("ramda");
+//#region imports
+const { path, pipe, values, divide, __, multiply, sum } = require("ramda");
+//#endregion
 
 const getHealth = path(["character", "meters", "health"]);
 const getSpirit = path(["character", "meters", "spirit"]);
@@ -26,10 +18,10 @@ const getCharacterItems = path(["character", "items"]);
 const getEarnedXP = pipe(
   getLegacyTracks,
   values,
-  map(prop("ticks")),
-  reduce(add, 0),
+  sum,
   divide(__, 4),
-  Math.floor
+  Math.floor,
+  multiply(__, 2)
 );
 
 const getSpentXP = path(["character", "legacy", "spent_xp"]);
