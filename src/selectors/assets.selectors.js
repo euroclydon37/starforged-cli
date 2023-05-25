@@ -1,5 +1,5 @@
-const { filter, prop } = require("ramda");
+const { filter, prop, pipe } = require('ramda')
 
-const getEnabledAbilities = filter(prop("Enabled"));
+const getEnabledAbilities = pipe(prop('Abilities'), filter(prop('Enabled')))
 
-module.exports = { getEnabledAbilities };
+module.exports = { getEnabledAbilities }

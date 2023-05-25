@@ -1,19 +1,40 @@
 //#region imports
-const { path, pipe, values, divide, __, multiply, sum } = require("ramda");
+const {
+  path,
+  pipe,
+  values,
+  divide,
+  __,
+  multiply,
+  sum,
+  defaultTo,
+} = require('ramda')
 //#endregion
 
-const getHealth = path(["character", "meters", "health"]);
-const getSpirit = path(["character", "meters", "spirit"]);
-const getSupply = path(["character", "meters", "supply"]);
-const getMomentum = path(["character", "meters", "momentum"]);
-const getMomentumReset = path(["character", "meters", "momentum_reset"]);
-const getMaxMomentum = path(["character", "meters", "max_momentum"]);
+const getHealth = pipe(path(['character', 'meters', 'health']), defaultTo(5))
+const getSpirit = pipe(path(['character', 'meters', 'spirit']), defaultTo(5))
+const getSupply = pipe(path(['character', 'meters', 'supply']), defaultTo(5))
+const getMomentum = pipe(
+  path(['character', 'meters', 'momentum']),
+  defaultTo(10),
+)
+const getMomentumReset = pipe(
+  path(['character', 'meters', 'momentum_reset']),
+  defaultTo(2),
+)
+const getMaxMomentum = pipe(
+  path(['character', 'meters', 'max_momentum']),
+  defaultTo(10),
+)
 
-const getCharacterAssets = path(["character", "assets"]);
-const getCharacter = path(["character"]);
-const getLegacyTracks = path(["character", "legacy", "tracks"]);
+const getCharacterAssets = pipe(path(['character', 'assets']), defaultTo([]))
+const getCharacter = pipe(path(['character']), defaultTo({}))
+const getLegacyTracks = pipe(
+  path(['character', 'legacy', 'tracks']),
+  defaultTo({}),
+)
 
-const getCharacterItems = path(["character", "items"]);
+const getCharacterItems = pipe(path(['character', 'items']), defaultTo([]))
 
 const getEarnedXP = pipe(
   getLegacyTracks,
@@ -21,16 +42,16 @@ const getEarnedXP = pipe(
   sum,
   divide(__, 4),
   Math.floor,
-  multiply(__, 2)
-);
+  multiply(__, 2),
+)
 
-const getSpentXP = path(["character", "legacy", "spent_xp"]);
+const getSpentXP = pipe(path(['character', 'legacy', 'spent_xp']), defaultTo(0))
 
 const getAvailableXP = (data) => {
-  const earned = getEarnedXP(data);
-  const spent = getSpentXP(data);
-  return earned - spent;
-};
+  const earned = getEarnedXP(data)
+  const spent = getSpentXP(data)
+  return earned - spent
+}
 
 module.exports = {
   getHealth,
@@ -46,4 +67,4 @@ module.exports = {
   getSpentXP,
   getAvailableXP,
   getCharacterItems,
-};
+}

@@ -12,7 +12,8 @@
   },
   "scripts": {
     "start": "node src/index.js",
-    "format": "prettier -w ."
+    "format": "prettier -w .",
+    "test": "jest --watch"
   },
   "keywords": [
     "starforged",
@@ -31,6 +32,8 @@
     "ramda": "^0.28.0"
   },
   "devDependencies": {
+    "@types/jest": "^29.5.1",
+    "jest": "^29.5.0",
     "prettier": "^2.7.1"
   }
 }
